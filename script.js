@@ -3,8 +3,25 @@ const home = document.querySelector(".home");
 const stamps = [...document.querySelectorAll(".stamp")];
 let topLayer = 30;
 let dragState = null;
+let isNavigating = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const openCollection = (href) => {
+  if (isNavigating) return;
+  isNavigating = true;
+  home.classList.add("is-opening-collection");
+
+  window.setTimeout(() => {
+    document.querySelector("#site-title").textContent = "Égypte";
+    document.querySelector(".subtitle").textContent = "August 2025";
+    home.classList.add("is-title-ready");
+  }, 300);
+
+  window.setTimeout(() => {
+    window.location.href = href;
+  }, 820);
+};
 
 const finishDrag = () => {
   if (!dragState) return;
@@ -57,7 +74,7 @@ stamps.forEach((stamp) => {
   stamp.addEventListener("keydown", (event) => {
     if ((event.key === "Enter" || event.key === " ") && stamp.dataset.href) {
       event.preventDefault();
-      window.location.href = stamp.dataset.href;
+      openCollection(stamp.dataset.href);
       return;
     }
 
@@ -134,7 +151,7 @@ document.addEventListener("pointerup", (event) => {
   if (dragState?.pointerId !== event.pointerId) return;
   const href = !dragState.active ? dragState.stamp.dataset.href : null;
   finishDrag();
-  if (href) window.location.href = href;
+  if (href) openCollection(href);
 });
 
 document.addEventListener("pointercancel", (event) => {
@@ -144,4 +161,11 @@ document.addEventListener("pointercancel", (event) => {
 window.addEventListener("blur", finishDrag);
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) finishDrag();
+});
+
+window.addEventListener("pageshow", () => {
+  isNavigating = false;
+  home.classList.remove("is-opening-collection", "is-title-ready");
+  document.querySelector("#site-title").textContent = "My film photography";
+  document.querySelector(".subtitle").textContent = "A collection by Audran";
 });
