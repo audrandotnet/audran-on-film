@@ -19,7 +19,7 @@ const finishDrag = () => {
     stamp.dataset.justDragged = "true";
     stamp.classList.add("is-settling");
     window.setTimeout(() => stamp.classList.remove("is-settling"), 650);
-    window.setTimeout(() => delete stamp.dataset.justDragged, 0);
+    window.setTimeout(() => delete stamp.dataset.justDragged, 160);
   }
 
   if (stamp.hasPointerCapture(pointerId)) stamp.releasePointerCapture(pointerId);
@@ -34,8 +34,6 @@ stamps.forEach((stamp) => {
     const item = stamp.getBoundingClientRect();
     stamp.style.left = `${item.left - surface.left}px`;
     stamp.style.top = `${item.top - surface.top}px`;
-    stamp.setPointerCapture(event.pointerId);
-
     dragState = {
       stamp,
       pointerId: event.pointerId,
@@ -98,6 +96,7 @@ document.addEventListener("pointermove", (event) => {
   if (!dragState.active) {
     if (distance < 4) return;
     dragState.active = true;
+    dragState.stamp.setPointerCapture(event.pointerId);
     dragState.stamp.style.zIndex = `${++topLayer}`;
     dragState.stamp.classList.add("is-dragging");
   }
