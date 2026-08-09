@@ -10,6 +10,8 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const title = document.querySelector("#site-title");
 const subtitle = document.querySelector(".subtitle");
 
+const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
+
 const fadeElements = async (elements, to, duration, stagger = 0) => {
   const list = [...elements];
   if (reduceMotion.matches) {
@@ -18,10 +20,10 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
   }
 
   const animations = list.map((element, index) => element.animate(
-    [{ opacity: getComputedStyle(element).opacity }, { opacity: to }],
-    { duration, delay: index * stagger, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
+    [{ opacity: Number.parseFloat(getComputedStyle(element).opacity) }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both" },
   ));
-  await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+  await wait(duration + Math.max(0, list.length - 1) * stagger);
   list.forEach((element) => { element.style.opacity = `${to}`; });
   animations.forEach((animation) => animation.cancel());
 };
@@ -31,9 +33,11 @@ const enterHomepage = async () => {
   [title, subtitle, ...stamps].forEach((element) => { element.style.opacity = "0"; });
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
-  await fadeElements([title], 1, 180);
-  await fadeElements([subtitle], 1, 150);
-  await fadeElements(stamps, 1, 190, 55);
+  await fadeElements([title], 1, 220);
+  await wait(35);
+  await fadeElements([subtitle], 1, 190);
+  await wait(45);
+  await fadeElements(stamps, 1, 230, 48);
 };
 
 const openCollection = async (href) => {
@@ -41,9 +45,12 @@ const openCollection = async (href) => {
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
   document.getAnimations().forEach((animation) => animation.cancel());
-  await fadeElements(stamps, 0, 170);
-  await fadeElements([title], 0, 145);
-  await fadeElements([subtitle], 0, 130);
+  await fadeElements(stamps, 0, 210, 22);
+  await wait(35);
+  await fadeElements([title], 0, 190);
+  await wait(30);
+  await fadeElements([subtitle], 0, 170);
+  await wait(25);
   window.location.href = href;
 };
 
