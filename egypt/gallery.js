@@ -31,7 +31,7 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
 const enterGallery = async () => {
   document.getAnimations().forEach((animation) => animation.cancel());
   [galleryTitle, gallerySubtitle, ...photos].forEach((element) => { element.style.opacity = "0"; });
-  await Promise.all(photos.map(async (photo) => {
+  await Promise.all(photos.slice(0, 2).map(async (photo) => {
     const image = photo.querySelector("img");
     if (!image || image.complete) return;
     await new Promise((resolve) => {
