@@ -40,6 +40,7 @@ body::after {
 }
 
 .home {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(330px, 39vw) 1fr;
   width: 100vw;
@@ -55,6 +56,7 @@ body::after {
   justify-content: center;
   padding: 7vw 3vw 7vw 7vw;
   text-align: left;
+  pointer-events: none;
 }
 
 h1 {
@@ -82,7 +84,6 @@ h1 {
   position: relative;
   min-width: 0;
   margin: 0;
-  isolation: isolate;
 }
 
 .stamp {
@@ -159,10 +160,10 @@ h1 {
   }
 
   .intro {
-    height: 48svh;
-    min-height: 360px;
-    justify-content: flex-end;
-    padding: 3rem 1.5rem 2.4rem;
+    height: 31svh;
+    min-height: 220px;
+    justify-content: center;
+    padding: 1.75rem 1.5rem 1rem;
   }
 
   h1 {
@@ -170,8 +171,8 @@ h1 {
   }
 
   .tabletop {
-    height: 78svh;
-    min-height: 600px;
+    height: 69svh;
+    min-height: 520px;
   }
 
   .stamp {
