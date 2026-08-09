@@ -30,10 +30,9 @@ stamps.forEach((stamp) => {
     if (!event.isPrimary || event.button !== 0 || dragState) return;
     stamp.classList.remove("is-settling");
 
-    const surface = tabletop.getBoundingClientRect();
     const item = stamp.getBoundingClientRect();
-    stamp.style.left = `${item.left - surface.left}px`;
-    stamp.style.top = `${item.top - surface.top}px`;
+    stamp.style.left = `${stamp.offsetLeft}px`;
+    stamp.style.top = `${stamp.offsetTop}px`;
     dragState = {
       stamp,
       pointerId: event.pointerId,
