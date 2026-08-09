@@ -59,10 +59,10 @@ h1 {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: clamp(1.4rem, 3vw, 4rem);
-  padding: 5vh 5vw 16vh 1vw;
+  gap: clamp(4rem, 10vh, 8rem);
+  padding: 7vh 7vw 18vh 2vw;
 }
 
 .gallery-photo {
@@ -72,7 +72,8 @@ h1 {
   --scale: 1;
   position: relative;
   display: block;
-  width: 100%;
+  width: min(58vw, 920px);
+  justify-self: center;
   margin: 0;
   padding: clamp(5px, 0.55vw, 9px);
   border: 0;
@@ -85,7 +86,7 @@ h1 {
   touch-action: pan-y;
 }
 
-.gallery-photo:nth-child(3n + 2) { margin-top: 10vh; }
+.gallery-photo:nth-child(3n + 2) { margin-top: 0; }
 .gallery-photo:nth-child(6n + 1) { --angle: -2.2deg; }
 .gallery-photo:nth-child(6n + 2) { --angle: 1.4deg; }
 .gallery-photo:nth-child(6n + 3) { --angle: 2.6deg; }
