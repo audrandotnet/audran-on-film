@@ -6,15 +6,45 @@ let dragState = null;
 let isNavigating = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const title = document.querySelector("#site-title");
+const subtitle = document.querySelector(".subtitle");
 
-const openCollection = (href) => {
+const fadeElements = async (elements, to, duration, stagger = 0) => {
+  const list = [...elements];
+  if (reduceMotion.matches) {
+    list.forEach((element) => { element.style.opacity = `${to}`; });
+    return;
+  }
+
+  const animations = list.map((element, index) => element.animate(
+    [{ opacity: getComputedStyle(element).opacity }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
+  ));
+  await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+  list.forEach((element) => { element.style.opacity = `${to}`; });
+  animations.forEach((animation) => animation.cancel());
+};
+
+const enterHomepage = async () => {
+  document.getAnimations().forEach((animation) => animation.cancel());
+  [title, subtitle, ...stamps].forEach((element) => { element.style.opacity = "0"; });
+  document.body.classList.remove("is-page-leaving");
+  document.body.classList.add("is-page-ready");
+  await fadeElements([title], 1, 180);
+  await fadeElements([subtitle], 1, 150);
+  await fadeElements(stamps, 1, 190, 55);
+};
+
+const openCollection = async (href) => {
   if (isNavigating) return;
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 235;
-  window.setTimeout(() => {
-    window.location.href = href;
-  }, delay);
+  document.getAnimations().forEach((animation) => animation.cancel());
+  await fadeElements(stamps, 0, 170);
+  await fadeElements([title], 0, 145);
+  await fadeElements([subtitle], 0, 130);
+  window.location.href = href;
 };
 
 const finishDrag = () => {
@@ -160,9 +190,7 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("pageshow", (event) => {
   if (!event.persisted) return;
   isNavigating = false;
-  document.body.classList.remove("is-page-leaving");
-  document.body.classList.remove("is-page-ready");
-  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
+  enterHomepage();
 });
 
-requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
+requestAnimationFrame(() => requestAnimationFrame(enterHomepage));
