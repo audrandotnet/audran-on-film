@@ -8,9 +8,15 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const finishDrag = () => {
   if (!dragState) return;
 
-  const { stamp, pointerId } = dragState;
+  const { stamp, pointerId, tiltTimer, active } = dragState;
+  window.clearTimeout(tiltTimer);
   dragState = null;
   stamp.classList.remove("is-dragging");
+  stamp.style.setProperty("--drag-tilt", "0deg");
+  if (active) {
+    stamp.classList.add("is-settling");
+    window.setTimeout(() => stamp.classList.remove("is-settling"), 650);
+  }
 
   if (stamp.hasPointerCapture(pointerId)) {
     stamp.releasePointerCapture(pointerId);
@@ -21,6 +27,7 @@ stamps.forEach((stamp) => {
   stamp.addEventListener("pointerdown", (event) => {
     if (!event.isPrimary || event.button !== 0 || dragState) return;
     event.preventDefault();
+    stamp.classList.remove("is-settling");
 
     const surface = tabletop.getBoundingClientRect();
     const item = stamp.getBoundingClientRect();
@@ -37,6 +44,11 @@ stamps.forEach((stamp) => {
       startY: event.clientY,
       offsetX: event.clientX - item.left,
       offsetY: event.clientY - item.top,
+      grabBias: clamp(((event.clientX - item.left) / item.width - 0.5) * 1.6, -0.8, 0.8),
+      lastX: event.clientX,
+      lastTime: performance.now(),
+      velocityX: 0,
+      tiltTimer: 0,
       active: false,
     };
   });
@@ -89,6 +101,22 @@ document.addEventListener("pointermove", (event) => {
 
   event.preventDefault();
   const { stamp } = dragState;
+  const now = performance.now();
+  const elapsed = Math.max(8, now - dragState.lastTime);
+  const instantVelocity = (event.clientX - dragState.lastX) / elapsed;
+  dragState.velocityX = dragState.velocityX * 0.62 + instantVelocity * 0.38;
+  dragState.lastX = event.clientX;
+  dragState.lastTime = now;
+
+  const tilt = clamp(dragState.grabBias + dragState.velocityX * 3.2, -4.2, 4.2);
+  stamp.style.setProperty("--drag-tilt", `${tilt.toFixed(2)}deg`);
+  window.clearTimeout(dragState.tiltTimer);
+  dragState.tiltTimer = window.setTimeout(() => {
+    if (!dragState || dragState.stamp !== stamp) return;
+    dragState.velocityX = 0;
+    stamp.style.setProperty("--drag-tilt", `${dragState.grabBias.toFixed(2)}deg`);
+  }, 75);
+
   const surface = tabletop.getBoundingClientRect();
   const maxX = Math.max(0, surface.width - stamp.offsetWidth);
   const maxY = Math.max(0, surface.height - stamp.offsetHeight);
