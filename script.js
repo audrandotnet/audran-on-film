@@ -55,11 +55,13 @@ stamps.forEach((stamp) => {
     if (dragState?.stamp === stamp) finishDrag();
   });
 
-  stamp.querySelector("a")?.addEventListener("click", (event) => {
-    if (stamp.dataset.justDragged) event.preventDefault();
-  });
-
   stamp.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" || event.key === " ") && stamp.dataset.href) {
+      event.preventDefault();
+      window.location.href = stamp.dataset.href;
+      return;
+    }
+
     const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
     if (!keys.includes(event.key)) return;
     event.preventDefault();
@@ -130,7 +132,10 @@ document.addEventListener("pointermove", (event) => {
 }, { passive: false });
 
 document.addEventListener("pointerup", (event) => {
-  if (dragState?.pointerId === event.pointerId) finishDrag();
+  if (dragState?.pointerId !== event.pointerId) return;
+  const href = !dragState.active ? dragState.stamp.dataset.href : null;
+  finishDrag();
+  if (href) window.location.href = href;
 });
 
 document.addEventListener("pointercancel", (event) => {
