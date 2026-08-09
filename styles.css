@@ -107,6 +107,9 @@ h1 span:nth-child(3) {
 
 .stamp {
   --angle: 0deg;
+  --drag-tilt: 0deg;
+  --lift: 0px;
+  --stamp-scale: 1;
   position: absolute;
   z-index: 1;
   width: clamp(118px, 12.5vw, 205px);
@@ -114,8 +117,11 @@ h1 span:nth-child(3) {
   cursor: grab;
   touch-action: none;
   user-select: none;
-  transform: rotate(var(--angle));
-  transition: scale 140ms cubic-bezier(0.22, 1, 0.36, 1), opacity 140ms ease;
+  transform: translate3d(0, var(--lift), 0) rotate(calc(var(--angle) + var(--drag-tilt))) scale(var(--stamp-scale));
+  transform-origin: 50% 55%;
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 140ms ease;
   will-change: left, top, transform;
 }
 
@@ -123,15 +129,24 @@ h1 span:nth-child(3) {
 .stamp:focus-visible {
   z-index: 40;
   outline: none;
-  scale: 1.006;
+  --lift: -1px;
+  --stamp-scale: 1.004;
   opacity: 0.97;
 }
 
 .stamp.is-dragging {
   z-index: 50;
   cursor: grabbing;
-  scale: 1.012;
+  --lift: -5px;
+  --stamp-scale: 1.016;
   opacity: 1;
+  transition:
+    transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 100ms ease;
+}
+
+.stamp.is-settling {
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stamp__paper {
@@ -200,7 +215,9 @@ h1 span:nth-child(3) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stamp {
+  .stamp,
+  .stamp.is-dragging,
+  .stamp.is-settling {
     transition: none;
   }
 }
