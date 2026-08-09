@@ -3,9 +3,38 @@ const lightbox = document.querySelector(".lightbox");
 const lightboxImage = document.querySelector(".lightbox__image");
 const closeButton = document.querySelector(".lightbox__close");
 const backLink = document.querySelector(".gallery-back");
+const galleryTitle = document.querySelector(".gallery-heading h1");
+const gallerySubtitle = document.querySelector(".gallery-heading p");
 let drag = null;
 let lastPhoto = null;
 let isNavigating = false;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+const fadeElements = async (elements, to, duration, stagger = 0) => {
+  const list = [...elements];
+  if (reduceMotion.matches) {
+    list.forEach((element) => { element.style.opacity = `${to}`; });
+    return;
+  }
+
+  const animations = list.map((element, index) => element.animate(
+    [{ opacity: getComputedStyle(element).opacity }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
+  ));
+  await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+  list.forEach((element) => { element.style.opacity = `${to}`; });
+  animations.forEach((animation) => animation.cancel());
+};
+
+const enterGallery = async () => {
+  document.getAnimations().forEach((animation) => animation.cancel());
+  [galleryTitle, gallerySubtitle, ...photos].forEach((element) => { element.style.opacity = "0"; });
+  document.body.classList.remove("is-page-leaving");
+  document.body.classList.add("is-page-ready");
+  await fadeElements([galleryTitle], 1, 180);
+  await fadeElements([gallerySubtitle], 1, 150);
+  await fadeElements(photos, 1, 210, 60);
+};
 
 const finishDrag = (event) => {
   if (!drag || (event && event.pointerId !== drag.pointerId)) return;
@@ -92,23 +121,22 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeLightbox();
 });
 
-backLink.addEventListener("click", (event) => {
+backLink.addEventListener("click", async (event) => {
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || isNavigating) return;
   event.preventDefault();
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 230;
-  window.setTimeout(() => {
-    window.location.href = backLink.href;
-  }, delay);
+  document.getAnimations().forEach((animation) => animation.cancel());
+  await fadeElements([...photos].reverse(), 0, 130, 32);
+  await fadeElements([gallerySubtitle], 0, 125);
+  await fadeElements([galleryTitle], 0, 140);
+  window.location.href = backLink.href;
 });
 
 window.addEventListener("pageshow", (event) => {
   if (!event.persisted) return;
   isNavigating = false;
-  document.body.classList.remove("is-page-leaving");
-  document.body.classList.remove("is-page-ready");
-  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
+  enterGallery();
 });
 
-requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
+requestAnimationFrame(() => requestAnimationFrame(enterGallery));
