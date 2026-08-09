@@ -10,17 +10,11 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const openCollection = (href) => {
   if (isNavigating) return;
   isNavigating = true;
-  home.classList.add("is-opening-collection");
-
-  window.setTimeout(() => {
-    document.querySelector("#site-title").textContent = "Égypte";
-    document.querySelector(".subtitle").textContent = "August 2025";
-    home.classList.add("is-title-ready");
-  }, 300);
-
+  document.body.classList.add("is-page-leaving");
+  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 390;
   window.setTimeout(() => {
     window.location.href = href;
-  }, 820);
+  }, delay);
 };
 
 const finishDrag = () => {
@@ -165,7 +159,8 @@ document.addEventListener("visibilitychange", () => {
 
 window.addEventListener("pageshow", () => {
   isNavigating = false;
-  home.classList.remove("is-opening-collection", "is-title-ready");
-  document.querySelector("#site-title").textContent = "My film photography";
-  document.querySelector(".subtitle").textContent = "A collection by Audran";
+  document.body.classList.remove("is-page-leaving");
+  requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
 });
+
+requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
