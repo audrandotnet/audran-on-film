@@ -4,7 +4,6 @@
   --black: #080808;
   --ink: #d8d4cd;
   --muted: #76736e;
-  --paper: #eee9df;
 }
 
 * {
@@ -55,11 +54,11 @@ body::after {
   flex-direction: column;
   justify-content: center;
   padding: 7vw 3vw 7vw 7vw;
+  text-align: left;
 }
 
 .eyebrow,
-.location,
-.hint {
+.location {
   margin: 0;
   color: var(--muted);
   font-size: 0.63rem;
@@ -76,10 +75,10 @@ h1 {
   margin: 0;
   color: var(--ink);
   font-family: "Italiana", Georgia, serif;
-  font-size: clamp(4rem, 7.6vw, 8.6rem);
+  font-size: clamp(2.8rem, 4.5vw, 5.4rem);
   font-weight: 400;
-  line-height: 0.78;
-  letter-spacing: -0.055em;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
 }
 
 h1 span {
@@ -87,13 +86,12 @@ h1 span {
 }
 
 h1 span:nth-child(2) {
-  margin-left: 0.36em;
   color: #9b9790;
   font-style: italic;
 }
 
 h1 span:nth-child(3) {
-  margin-left: 0.08em;
+  color: #bbb7b0;
 }
 
 .location {
@@ -107,27 +105,17 @@ h1 span:nth-child(3) {
   isolation: isolate;
 }
 
-.hint {
-  position: absolute;
-  right: 2rem;
-  bottom: 1.8rem;
-  z-index: 30;
-  opacity: 0.65;
-}
-
 .stamp {
   --angle: 0deg;
   position: absolute;
   z-index: 1;
   width: clamp(118px, 12.5vw, 205px);
-  aspect-ratio: 0.76;
   margin: 0;
   cursor: grab;
   touch-action: none;
   user-select: none;
   transform: rotate(var(--angle));
-  filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.55));
-  transition: filter 180ms ease, scale 180ms ease;
+  transition: scale 180ms ease;
   will-change: left, top, transform;
 }
 
@@ -135,40 +123,24 @@ h1 span:nth-child(3) {
 .stamp:focus-visible {
   z-index: 40;
   outline: none;
-  filter: drop-shadow(0 22px 30px rgb(0 0 0 / 0.72));
   scale: 1.025;
 }
 
 .stamp.is-dragging {
   z-index: 50;
   cursor: grabbing;
-  filter: drop-shadow(0 28px 35px rgb(0 0 0 / 0.76));
   scale: 1.04;
 }
 
 .stamp__paper {
   width: 100%;
-  height: 100%;
-  padding: 8%;
-  background-color: var(--paper);
-  clip-path: polygon(3% 0, 97% 0, 97% 2%, 100% 2%, 100% 98%, 97% 98%, 97% 100%, 3% 100%, 3% 98%, 0 98%, 0 2%, 3% 2%);
-}
-
-.stamp__paper::after {
-  position: absolute;
-  inset: 8%;
-  content: "";
-  box-shadow: inset 0 0 18px rgb(0 0 0 / 0.17);
-  pointer-events: none;
 }
 
 .stamp img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   pointer-events: none;
-  object-fit: cover;
-  filter: saturate(0.82) contrast(1.06);
 }
 
 .stamp--one { left: 7%; top: 8%; --angle: -12deg; }
@@ -201,7 +173,7 @@ h1 span:nth-child(3) {
   }
 
   h1 {
-    font-size: clamp(3.7rem, 19vw, 6.4rem);
+    font-size: clamp(2.8rem, 14vw, 4.8rem);
   }
 
   .location {
@@ -215,11 +187,6 @@ h1 span:nth-child(3) {
 
   .stamp {
     width: clamp(104px, 31vw, 155px);
-  }
-
-  .hint {
-    right: 1.25rem;
-    bottom: 1.2rem;
   }
 
   .stamp--one { left: 5%; top: 5%; }
