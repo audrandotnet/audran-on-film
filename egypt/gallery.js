@@ -10,6 +10,8 @@ let lastPhoto = null;
 let isNavigating = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
+
 const fadeElements = async (elements, to, duration, stagger = 0) => {
   const list = [...elements];
   if (reduceMotion.matches) {
@@ -18,10 +20,10 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
   }
 
   const animations = list.map((element, index) => element.animate(
-    [{ opacity: getComputedStyle(element).opacity }, { opacity: to }],
-    { duration, delay: index * stagger, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" },
+    [{ opacity: Number.parseFloat(getComputedStyle(element).opacity) }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both" },
   ));
-  await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+  await wait(duration + Math.max(0, list.length - 1) * stagger);
   list.forEach((element) => { element.style.opacity = `${to}`; });
   animations.forEach((animation) => animation.cancel());
 };
@@ -29,11 +31,21 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
 const enterGallery = async () => {
   document.getAnimations().forEach((animation) => animation.cancel());
   [galleryTitle, gallerySubtitle, ...photos].forEach((element) => { element.style.opacity = "0"; });
+  await Promise.all(photos.map(async (photo) => {
+    const image = photo.querySelector("img");
+    if (!image || image.complete) return;
+    await new Promise((resolve) => {
+      image.addEventListener("load", resolve, { once: true });
+      image.addEventListener("error", resolve, { once: true });
+    });
+  }));
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
-  await fadeElements([galleryTitle], 1, 180);
-  await fadeElements([gallerySubtitle], 1, 150);
-  await fadeElements(photos, 1, 210, 60);
+  await fadeElements([galleryTitle], 1, 220);
+  await wait(35);
+  await fadeElements([gallerySubtitle], 1, 190);
+  await wait(45);
+  await fadeElements(photos, 1, 240, 65);
 };
 
 const finishDrag = (event) => {
@@ -127,9 +139,12 @@ backLink.addEventListener("click", async (event) => {
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
   document.getAnimations().forEach((animation) => animation.cancel());
-  await fadeElements([...photos].reverse(), 0, 130, 32);
-  await fadeElements([gallerySubtitle], 0, 125);
-  await fadeElements([galleryTitle], 0, 140);
+  await fadeElements([...photos].reverse(), 0, 170, 24);
+  await wait(35);
+  await fadeElements([gallerySubtitle], 0, 170);
+  await wait(30);
+  await fadeElements([galleryTitle], 0, 190);
+  await wait(25);
   window.location.href = backLink.href;
 });
 
