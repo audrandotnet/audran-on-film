@@ -69,6 +69,22 @@ body::after {
   transition: opacity 320ms ease, transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.home.is-opening-collection .stamp {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+
+.home.is-opening-collection .intro__copy {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.home.is-opening-collection.is-title-ready .intro__copy {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 h1 {
   margin: 0;
   color: #fff;
