@@ -10,33 +10,87 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="home">
+    <main class="home" id="home-view">
       <section class="intro" aria-labelledby="site-title">
-        <h1 id="site-title">My film photography</h1>
-        <p class="subtitle">A collection by Audran</p>
+        <div class="intro__copy">
+          <h1 id="site-title">My film photography</h1>
+          <p class="subtitle">A collection by Audran</p>
+          <button class="collection-trigger" type="button" data-open-collection>
+            <span>Égypte</span>
+            <small>August 2025</small>
+          </button>
+        </div>
       </section>
 
-      <section class="tabletop" aria-label="Images à déplacer">
+      <section class="tabletop" aria-label="Collection Égypte, images à déplacer">
         <figure class="stamp stamp--one" tabindex="0" aria-label="Photographie argentique 1, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
         <figure class="stamp stamp--two" tabindex="0" aria-label="Photographie argentique 2, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
         <figure class="stamp stamp--three" tabindex="0" aria-label="Photographie argentique 3, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
         <figure class="stamp stamp--four" tabindex="0" aria-label="Photographie argentique 4, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
         <figure class="stamp stamp--five" tabindex="0" aria-label="Photographie argentique 5, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
         <figure class="stamp stamp--six" tabindex="0" aria-label="Photographie argentique 6, déplaçable">
-          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/21_21.webp" alt="Photographie argentique temporaire" draggable="false" /></div>
+          <div class="stamp__paper"><img src="https://tokyo.floguo.com/images/webp/ap.webp" alt="Timbre de la collection Égypte" draggable="false" /></div>
         </figure>
       </section>
     </main>
+
+    <main class="collection-page" id="collection-view" aria-hidden="true">
+      <header class="collection-heading">
+        <button class="collection-back" type="button" data-close-collection>← Collections</button>
+        <div class="collection-heading__copy">
+          <h1>Égypte</h1>
+          <p class="subtitle">August 2025</p>
+        </div>
+      </header>
+
+      <section class="photo-grid" aria-label="Photographies de la collection Égypte">
+        <button class="gallery-photo" type="button"><img src="https://lh3.googleusercontent.com/sitesv/AG8ngQU29NdEBJx3oA2mkW39pATEwH9cj5j_OU4Bw6OuplDjdRAJySgdFVuUtIH0PHrg7BbML8WYPaYJ6K_Kkl9nWABVSQVMuyg9BaAVOUZypSOCiU6oNyj2rJ8kd5nD6cFWRwnaciXC7ErlvEispsLF0vNhb60NMlf_1M53fDJIN7nX3sQBfZYR2gx-9AcWVU6DNj3ybYwmKX23ZEowXCBgwcl2glMiZb3rQ5mdvxBO3Ls=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQUa65j1jorpHvXxGprQkngmS4Dyd0-XCPlWIKbUX0_F927aXiHqe1t6hvTJI6gqMjUgCRRELc4_JTA63MF5A7p7ZJFAgSa6PrHuy6jKLtHVEKM0XRxdcSIIE6zSuWf-v9DpjMMWNvNN0olaLMFxklXc3kSZBj5RDc_6Q1xABWWIQu1l8BdbpFJ_RI6oQm949rN0I9HeHgqG91K-5LmPBhOnR3P1QwnFLOY0o-YU=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQUkfDtF5zm2wrlwxtXsSP9O1q-7vkSwulDqez_BElPeD6QOyrYAJowkF5tIv7IVsfFYl7DrjrlfKesNHmjC5DU2RhkJQLgc5-7GKMxw102S5jYOoFB6wQz1rDSZo-sW9wyw02JzdAq0zC_0AjFWM82qj0dl1dUJ3yX-uttOV4wZ3WD-olZLmHX2dvZgu0voa8HwFQuP0Snl7BLE1xHRO3b3f30jpgFOy49cNCNzxd4=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQUkv8rvwuPofOAmmEMPyPbgItWkVm6eHCcB-hYfw1yDUEMisTN69zSfu-VRSDSrrEB5i15IZMrhdKNxV5ai5T2P-LErWR5kwjHk_aO2Bv5xxGjuSePACaBXpdZnQ9Ph74_1aO2AeaWUDFcOz9AipkYkoPX_Dn3UnrF6nG0ZNrMEBF8h_EN0424uOU7jnFDoFvHTyFMIWLI324OPlhIJXPiqMD-eCR-oBZkNXzgnUYA=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQUwEjJ2nhx3MxnOpNuFM8c1nX9HZwIV4quF8NUYwq0uA-84QiXhOaAei8-2YlAzUSEugxhwpGH_f6AWoDOrxnsDB-g7CFcQCc08WAIqavsygxjxNqBMJ0WmQnyavHHU9AHH0gPrbuiYzfwVJC3U0u_fVtP5ThRZbxLmopkaeplKwAG54Kj26UxUP_FcHQfEV4nEbntVW7vfYc-feNaYxO-Ypoc3J1iFDlVJdev16Hs=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQUy3W6GVh34YbIjNWvkiaS-x9smxfWM2IJBwsJ-Vcpef3S2sio3QX_jqdrz0mE1kDCd4z4bEpckw1XyGbyewqYVlCeVBBWCmVzVSswfTENDAzAg3y6bVjwIu6oN53glFQjocPg1W3ghL8_J-5oD6SFjODLx6276LGroj4pMBt0AUsjpgFpMeC5n6HhfiFrTVsW6BczFNf4e-Oe0oZpiPhlqJWJfzeP9CWRDAcbr=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQVWVniRaHBeeZPDnaRTvTBWpUeDS3FmEAwQIafhzOeK08l19W5V1AlTZMiV3O3xODLjFQzDL9ZUBRxFKqSwLVJdtbgq0D7N3F5B1cGyFUxafCynjEEyQGZ50q1ZRSQebdBFtAOL1tm89edZBA6am2w7XsUUoJrPSOI5p2WxkzPRG-PF4xmUvLy0N3_98e0eaa-SDQfRLaw1s8nufpJFq_ShqSBpaMRT1xJjsuLLXw4=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQVrSlKeDImMB8yQFoPSj9TdTQ6NIOJLcCxHKf6o0ABsvYK_ykke2NkrpbfnwAn9HcCtcl8Ox526UGm7VYpk2WGWR0QCH8xdBaJ2-NKVwGZyNj0DIBU12h-UDISY3Lyngg7xWdFrwZ_zQYGA06fc0C2710UONG9oRhd1jrE19M8FLil10WTRYsfWSk5UV3OqzBrocw06WumO3xmo2P3XGfEHe5TS0aHwhH9vT2L1L1Q=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQW0o85MtHrNlUEbZIddT1i3vePbTLzN0lg0CoK_UwF1EsORD4jSVb6OqDrqsjfPo1blGQSClWFqb-ENJ9wFW2vJdXhjw6AtEB9ues-fjUPUSaDkWkyVNbhLAGYgU2KjjGYKRlo9JphvT8GG8a0BQLgC-JBqT5WneUHElg6FAAsJsUohQ2LhT5FiaEuAGtwznQsRM-iGt7gzplp8PVBowRX6ZfSYPeAjMnJ6SHuD3Dk=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQWGOH047HyAwgZkmB9P0vgGF_Hy12r3whYBLl--w5poNoFjh-6gbr9O_WCP1ReFKIqihQk4Je73ftvMEK5Z0u_iiGjC7BBzdHoY_Yer4ISOuxwkC3kV3zgwC7mtq-hV5eB-1DTKaibiKf8TyNY-exeYgL6lUEQAgr1wsZ6LRiuWNeyH7z71WHJ8Zi2_IHWqqCJxF9U4FMrNoO_osUkTrykqYWoaXSSZCPMLBSUp=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQWQK4VV1hMz_VVNRBZ6-Uupv60dFx55CQhvEdm1JJyTw7qiB09Vh41IfC0XpfU3cid7ayo8lrRyE7c7KXnIt1e4UbwY9bpJo3tlKNLyx_Z28Az0e3HMF9mMVtcicIdV48oCm9-8_1xXx3DwbxDu9anyUj9YGjJoz9NhoQYAfFdnq7DXprJDfiz-wO3aCoHwYSwAeYwYz169djQbHBuSiheNKSzXzi7SNiYeB9EyjZo=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQWbjhsSI2O9qz9sRwOc4oxYloIyzC772uUCCwR-3LGovk0SjqiFM_iAfrRtSiW0KkJ1xQ5qwbRDSUVeO31-0gKedBUgfHvUWhPQgzfJDQ3-xtNz0H9J6uwWvnhCryBFgMKmtsFA3u77ZnjDg75smS9Vsw9rwIaDtnLMdLGa9-DmzT8MM4mvV0XJFg197PH2-gqNLbMWQJp33uHtL6qSNjDMJuOuCCUdlLAKUDsDx6E=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQX-20XPyzQiV74CjF5vxUzUKH6127pGnz0JcguZto1LdORFcfuGZqlIhkOkMdz1iNKdMTy1oU-wpzgvlemhIt2nyGzSR1OxuJIgySBaYrqzNaWmwCgWzutF6qqXdlSWthN-6PPb854R-TQCl-3G2d9nHVwMZB5--D5NP7TlZtZBIJZe6ZSIo5RbJi7fk-H73Tvts4Jd0LrMuFxhiTqhZgQUtheCuqhhvk83QxT8=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQXCt1VNPI5YPRr38JDwnZ-qkzIJ-3YRfDVfgQBt8TVqMmJ3txu5OB1E2xeYA4XOcJs6j68hAfqVigRw7RUYs6DQUxpmCNLUtitG6lC0yoXr-DBpRCA4jnb6vD7bdShQEe5JjBtLSZkSktP95FeMaf7lp3H_vWWTLBwMPS3uoJfJgkpaLLgUCLhPWtAPko1TNhERJTntGpXsx4HcJQr5F3pQcqjudCrChJx73ULa=w1280
+https://lh3.googleusercontent.com/sitesv/AG8ngQXd6Ny_ccHOF8YvL5rUPi1fhxhMitThKsdX0501k-62Vu83ovKx7hF4Kw8Zq83XjtV186lI7ZonJK5wDRW-2eknIvlva7UCoSBO-jw0WlVz4uU-aWXLSYW5qmESwtJXCPcTm5uIjDYi-lJ2E_IjwoK5rFHZMX28ylzsuAFeG_rVAFY9cGkn3-wAbcobivHhHP-0dTBkKxeQcUcAoDEbnNgunm9rs9stcUAVrwG7rmw=w1280
+" alt="Égypte, août 2025 — photographie 01" draggable="false" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 02" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 03" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 04" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 05" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 06" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 07" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 08" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 09" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 10" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 11" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 12" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 13" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 14" draggable="false" loading="lazy" /></button>
+        <button class="gallery-photo" type="button"><img src="" alt="Égypte, août 2025 — photographie 15" draggable="false" loading="lazy" /></button>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photographie agrandie" aria-hidden="true">
+      <button class="lightbox__close" type="button" aria-label="Fermer la photographie">×</button>
+      <img class="lightbox__image" src="" alt="" />
+    </div>
 
     <script src="script.js"></script>
   </body>
