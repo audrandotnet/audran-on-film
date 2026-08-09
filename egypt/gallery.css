@@ -68,22 +68,32 @@ h1 {
 .gallery-photo {
   --x: 0px;
   --y: 0px;
+  --angle: 0deg;
+  --scale: 1;
   position: relative;
   display: block;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: clamp(5px, 0.55vw, 9px);
   border: 0;
-  background: none;
+  background: #f1eee7;
   cursor: zoom-in;
-  transform: translate3d(var(--x), var(--y), 0);
+  transform: translate3d(var(--x), var(--y), 0) rotate(var(--angle)) scale(var(--scale));
+  transform-origin: 50% 52%;
+  box-shadow: 0 18px 35px rgb(0 0 0 / 0.28);
   transition: opacity 160ms ease, transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
   touch-action: pan-y;
 }
 
 .gallery-photo:nth-child(3n + 2) { margin-top: 10vh; }
-.gallery-photo:hover, .gallery-photo:focus-visible { z-index: 4; opacity: 0.95; outline: none; }
-.gallery-photo.is-dragging { z-index: 20; cursor: grabbing; transition: opacity 100ms ease; }
+.gallery-photo:nth-child(6n + 1) { --angle: -2.2deg; }
+.gallery-photo:nth-child(6n + 2) { --angle: 1.4deg; }
+.gallery-photo:nth-child(6n + 3) { --angle: 2.6deg; }
+.gallery-photo:nth-child(6n + 4) { --angle: -1.1deg; }
+.gallery-photo:nth-child(6n + 5) { --angle: 1.9deg; }
+.gallery-photo:nth-child(6n) { --angle: -2.7deg; }
+.gallery-photo:hover, .gallery-photo:focus-visible { --scale: 1.006; z-index: 4; outline: none; }
+.gallery-photo.is-dragging { --scale: 1.018; z-index: 20; cursor: grabbing; transition: opacity 100ms ease; }
 
 .gallery-photo img {
   display: block;
