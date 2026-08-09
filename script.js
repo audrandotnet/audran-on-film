@@ -21,7 +21,7 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
 
   const animations = list.map((element, index) => element.animate(
     [{ opacity: Number.parseFloat(getComputedStyle(element).opacity) }, { opacity: to }],
-    { duration, delay: index * stagger, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both" },
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.37, 0, 0.63, 1)", fill: "both" },
   ));
   await wait(duration + Math.max(0, list.length - 1) * stagger);
   list.forEach((element) => { element.style.opacity = `${to}`; });
@@ -33,11 +33,8 @@ const enterHomepage = async () => {
   [title, subtitle, ...stamps].forEach((element) => { element.style.opacity = "0"; });
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
-  await fadeElements([title], 1, 220);
-  await wait(35);
-  await fadeElements([subtitle], 1, 190);
-  await wait(45);
-  await fadeElements(stamps, 1, 230, 48);
+  await fadeElements([title, subtitle], 1, 280, 35);
+  await fadeElements(stamps, 1, 300, 42);
 };
 
 const openCollection = async (href) => {
@@ -45,12 +42,8 @@ const openCollection = async (href) => {
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
   document.getAnimations().forEach((animation) => animation.cancel());
-  await fadeElements(stamps, 0, 210, 22);
-  await wait(35);
-  await fadeElements([title], 0, 190);
-  await wait(30);
-  await fadeElements([subtitle], 0, 170);
-  await wait(25);
+  await fadeElements(stamps, 0, 280, 14);
+  await fadeElements([title, subtitle], 0, 240, 22);
   window.location.href = href;
 };
 
