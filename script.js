@@ -1,6 +1,7 @@
 const tabletop = document.querySelector(".tabletop");
+const home = document.querySelector(".home");
 const stamps = [...document.querySelectorAll(".stamp")];
-let topLayer = stamps.length;
+let topLayer = 30;
 let dragState = null;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -63,7 +64,8 @@ stamps.forEach((stamp) => {
     event.preventDefault();
 
     const step = event.shiftKey ? 20 : 6;
-    const surface = tabletop.getBoundingClientRect();
+    const surface = home.getBoundingClientRect();
+    const container = tabletop.getBoundingClientRect();
     const item = stamp.getBoundingClientRect();
     let x = item.left - surface.left;
     let y = item.top - surface.top;
@@ -73,8 +75,10 @@ stamps.forEach((stamp) => {
     if (event.key === "ArrowUp") y -= step;
     if (event.key === "ArrowDown") y += step;
 
-    stamp.style.left = `${clamp(x, 0, surface.width - stamp.offsetWidth)}px`;
-    stamp.style.top = `${clamp(y, 0, surface.height - stamp.offsetHeight)}px`;
+    const boundedX = clamp(x, 0, surface.width - stamp.offsetWidth);
+    const boundedY = clamp(y, 0, surface.height - stamp.offsetHeight);
+    stamp.style.left = `${surface.left + boundedX - container.left}px`;
+    stamp.style.top = `${surface.top + boundedY - container.top}px`;
     stamp.style.zIndex = `${++topLayer}`;
   });
 });
@@ -117,14 +121,15 @@ document.addEventListener("pointermove", (event) => {
     stamp.style.setProperty("--drag-tilt", `${dragState.grabBias.toFixed(2)}deg`);
   }, 75);
 
-  const surface = tabletop.getBoundingClientRect();
+  const surface = home.getBoundingClientRect();
+  const container = tabletop.getBoundingClientRect();
   const maxX = Math.max(0, surface.width - stamp.offsetWidth);
   const maxY = Math.max(0, surface.height - stamp.offsetHeight);
   const x = clamp(event.clientX - surface.left - dragState.offsetX, 0, maxX);
   const y = clamp(event.clientY - surface.top - dragState.offsetY, 0, maxY);
 
-  stamp.style.left = `${x}px`;
-  stamp.style.top = `${y}px`;
+  stamp.style.left = `${surface.left + x - container.left}px`;
+  stamp.style.top = `${surface.top + y - container.top}px`;
 }, { passive: false });
 
 document.addEventListener("pointerup", (event) => {
