@@ -2,8 +2,10 @@ const photos = [...document.querySelectorAll(".gallery-photo")];
 const lightbox = document.querySelector(".lightbox");
 const lightboxImage = document.querySelector(".lightbox__image");
 const closeButton = document.querySelector(".lightbox__close");
+const backLink = document.querySelector(".gallery-back");
 let drag = null;
 let lastPhoto = null;
+let isNavigating = false;
 
 const finishDrag = (event) => {
   if (!drag || (event && event.pointerId !== drag.pointerId)) return;
@@ -89,3 +91,22 @@ lightbox.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeLightbox();
 });
+
+backLink.addEventListener("click", (event) => {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || isNavigating) return;
+  event.preventDefault();
+  isNavigating = true;
+  document.body.classList.add("is-page-leaving");
+  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 390;
+  window.setTimeout(() => {
+    window.location.href = backLink.href;
+  }, delay);
+});
+
+window.addEventListener("pageshow", () => {
+  isNavigating = false;
+  document.body.classList.remove("is-page-leaving");
+  requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
+});
+
+requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
