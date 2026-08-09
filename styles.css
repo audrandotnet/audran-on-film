@@ -71,7 +71,7 @@ h1 {
 }
 
 .subtitle {
-  margin: 1.1rem 0 0;
+  margin: 1.5rem 0 0;
   color: #8c8984;
   font-size: clamp(0.56rem, 0.58vw, 0.7rem);
   font-weight: 300;
