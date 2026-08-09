@@ -11,7 +11,7 @@ const openCollection = (href) => {
   if (isNavigating) return;
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 390;
+  const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 235;
   window.setTimeout(() => {
     window.location.href = href;
   }, delay);
@@ -157,10 +157,12 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) finishDrag();
 });
 
-window.addEventListener("pageshow", () => {
+window.addEventListener("pageshow", (event) => {
+  if (!event.persisted) return;
   isNavigating = false;
   document.body.classList.remove("is-page-leaving");
-  requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
+  document.body.classList.remove("is-page-ready");
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
 });
 
 requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-page-ready")));
