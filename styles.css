@@ -63,8 +63,19 @@ h1 {
   font-family: "Fanwood Text", "Fanwood", Georgia, serif;
   font-size: clamp(2.8rem, 4.2vw, 5rem);
   font-weight: 400;
+  font-style: normal;
   line-height: 1;
   letter-spacing: -0.025em;
+}
+
+.subtitle {
+  margin: 0.8rem 0 0;
+  color: #8c8984;
+  font-size: clamp(0.56rem, 0.58vw, 0.7rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .tabletop {
