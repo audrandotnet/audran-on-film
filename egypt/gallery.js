@@ -125,6 +125,7 @@ photos.forEach((photo) => {
       ? image.naturalWidth / image.naturalHeight
       : rect.width / rect.height;
     const frameStyle = getComputedStyle(photo);
+    const framePadding = Number.parseFloat(frameStyle.paddingTop);
     const horizontalFrame = Number.parseFloat(frameStyle.paddingLeft)
       + Number.parseFloat(frameStyle.paddingRight);
     const verticalFrame = Number.parseFloat(frameStyle.paddingTop)
@@ -145,7 +146,7 @@ photos.forEach((photo) => {
     const originCenterX = rect.left + rect.width / 2;
     const originCenterY = rect.top + rect.height / 2;
     const originScale = layoutWidth / targetWidth;
-    focusedOrigin = { angle, x: originX, y: originY, targetWidth, targetHeight };
+    focusedOrigin = { angle, x: originX, y: originY, targetWidth, targetHeight, framePadding };
     focusedPlaceholder = document.createElement("span");
     focusedPlaceholder.className = "gallery-photo-placeholder";
     focusedPlaceholder.style.width = `${layoutWidth}px`;
@@ -162,11 +163,15 @@ photos.forEach((photo) => {
       height: `${targetHeight}px`,
       maxHeight: "none",
       margin: "0",
+      padding: `${framePadding}px`,
       transform: focusedTransform,
     });
     photo.classList.add("is-focused");
     focusedAnimation = photo.animate(
-      [{ transform: originTransform }, { transform: focusedTransform }],
+      [
+        { transform: originTransform, padding: `${framePadding / originScale}px` },
+        { transform: focusedTransform, padding: `${framePadding}px` },
+      ],
       { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
     );
     lightbox.setAttribute("aria-hidden", "false");
@@ -206,13 +211,19 @@ const closeLightbox = () => {
   const destinationCenterY = destination.top + destination.height / 2 + focusedOrigin.y;
   const destinationScale = destination.width / focusedOrigin.targetWidth;
   const currentTransform = getComputedStyle(focusedPhoto).transform;
+  const currentPadding = getComputedStyle(focusedPhoto).paddingTop;
   const destinationTransform = `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`;
+  const destinationPadding = focusedOrigin.framePadding / destinationScale;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   focusedAnimation?.cancel();
   focusedPhoto.style.transform = destinationTransform;
+  focusedPhoto.style.padding = `${destinationPadding}px`;
   focusedAnimation = focusedPhoto.animate(
-    [{ transform: currentTransform }, { transform: destinationTransform }],
+    [
+      { transform: currentTransform, padding: currentPadding },
+      { transform: destinationTransform, padding: `${destinationPadding}px` },
+    ],
     { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
   );
   window.setTimeout(() => {
