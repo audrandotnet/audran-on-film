@@ -141,7 +141,10 @@ photos.forEach((photo) => {
 
     lastPhoto = photo;
     focusedPhoto = photo;
-    focusedOrigin = { angle, x: originX, y: originY };
+    const originCenterX = rect.left + rect.width / 2;
+    const originCenterY = rect.top + rect.height / 2;
+    const originScale = layoutWidth / targetWidth;
+    focusedOrigin = { angle, x: originX, y: originY, targetWidth, targetHeight };
     focusedPlaceholder = document.createElement("span");
     focusedPlaceholder.className = "gallery-photo-placeholder";
     focusedPlaceholder.style.width = `${layoutWidth}px`;
@@ -150,23 +153,19 @@ photos.forEach((photo) => {
     document.body.append(photo);
     Object.assign(photo.style, {
       position: "fixed",
-      left: `${rect.left + (rect.width - layoutWidth) / 2}px`,
-      top: `${rect.top + (rect.height - layoutHeight) / 2}px`,
-      width: `${layoutWidth}px`,
-      height: `${layoutHeight}px`,
+      left: "50%",
+      top: "50%",
+      width: `${targetWidth}px`,
+      height: `${targetHeight}px`,
       maxHeight: "none",
       margin: "0",
-      transform: `rotate(${angle})`,
+      transform: `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`,
     });
     lightbox.setAttribute("aria-hidden", "false");
     lightbox.classList.add("is-open");
     requestAnimationFrame(() => requestAnimationFrame(() => {
       photo.classList.add("is-focused");
       Object.assign(photo.style, {
-        left: "50%",
-        top: "50%",
-        width: `${targetWidth}px`,
-        height: `${targetHeight}px`,
         transform: "translate(-50%, -50%) rotate(0deg)",
       });
     }));
@@ -201,14 +200,13 @@ document.addEventListener("pointercancel", finishDrag);
 const closeLightbox = () => {
   if (!lightbox.classList.contains("is-open") || !focusedPhoto || !focusedPlaceholder || !focusedOrigin) return;
   const destination = focusedPlaceholder.getBoundingClientRect();
+  const destinationCenterX = destination.left + destination.width / 2 + focusedOrigin.x;
+  const destinationCenterY = destination.top + destination.height / 2 + focusedOrigin.y;
+  const destinationScale = destination.width / focusedOrigin.targetWidth;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   Object.assign(focusedPhoto.style, {
-    left: `${destination.left + focusedOrigin.x}px`,
-    top: `${destination.top + focusedOrigin.y}px`,
-    width: `${destination.width}px`,
-    height: `${destination.height}px`,
-    transform: `rotate(${focusedOrigin.angle})`,
+    transform: `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`,
   });
   window.setTimeout(() => {
     focusedPhoto.classList.remove("is-focused");
