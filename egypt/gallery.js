@@ -28,6 +28,7 @@ let drag = null;
 let lastPhoto = null;
 let focusedPhoto = null;
 let focusedPlaceholder = null;
+let focusedOrigin = null;
 let isNavigating = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isMobile = window.matchMedia("(max-width: 760px)").matches;
@@ -114,6 +115,11 @@ photos.forEach((photo) => {
     if (photo.dataset.justDragged) return;
     const rect = photo.getBoundingClientRect();
     const image = photo.querySelector("img");
+    const layoutWidth = photo.offsetWidth;
+    const layoutHeight = photo.offsetHeight;
+    const angle = getComputedStyle(photo).getPropertyValue("--angle").trim() || "0deg";
+    const originX = Number(photo.dataset.x) || 0;
+    const originY = Number(photo.dataset.y) || 0;
     const ratio = image.naturalWidth && image.naturalHeight
       ? image.naturalWidth / image.naturalHeight
       : rect.width / rect.height;
@@ -128,21 +134,22 @@ photos.forEach((photo) => {
 
     lastPhoto = photo;
     focusedPhoto = photo;
+    focusedOrigin = { angle, x: originX, y: originY };
     focusedPlaceholder = document.createElement("span");
     focusedPlaceholder.className = "gallery-photo-placeholder";
-    focusedPlaceholder.style.width = `${photo.offsetWidth}px`;
-    focusedPlaceholder.style.height = `${photo.offsetHeight}px`;
+    focusedPlaceholder.style.width = `${layoutWidth}px`;
+    focusedPlaceholder.style.height = `${layoutHeight}px`;
     photo.before(focusedPlaceholder);
     document.body.append(photo);
     Object.assign(photo.style, {
       position: "fixed",
-      left: `${rect.left}px`,
-      top: `${rect.top}px`,
-      width: `${rect.width}px`,
-      height: `${rect.height}px`,
+      left: `${rect.left + (rect.width - layoutWidth) / 2}px`,
+      top: `${rect.top + (rect.height - layoutHeight) / 2}px`,
+      width: `${layoutWidth}px`,
+      height: `${layoutHeight}px`,
       maxHeight: "none",
       margin: "0",
-      transform: "none",
+      transform: `rotate(${angle})`,
     });
     lightbox.setAttribute("aria-hidden", "false");
     lightbox.classList.add("is-open");
@@ -185,26 +192,29 @@ document.addEventListener("pointerup", finishDrag);
 document.addEventListener("pointercancel", finishDrag);
 
 const closeLightbox = () => {
-  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !focusedPlaceholder) return;
+  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !focusedPlaceholder || !focusedOrigin) return;
   const destination = focusedPlaceholder.getBoundingClientRect();
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   Object.assign(focusedPhoto.style, {
-    left: `${destination.left}px`,
-    top: `${destination.top}px`,
+    left: `${destination.left + focusedOrigin.x}px`,
+    top: `${destination.top + focusedOrigin.y}px`,
     width: `${destination.width}px`,
     height: `${destination.height}px`,
-    transform: "none",
+    transform: `rotate(${focusedOrigin.angle})`,
   });
   window.setTimeout(() => {
     focusedPhoto.classList.remove("is-focused");
     focusedPlaceholder.before(focusedPhoto);
     focusedPlaceholder.remove();
     focusedPhoto.removeAttribute("style");
-    focusedPhoto.dataset.x = "0";
-    focusedPhoto.dataset.y = "0";
+    focusedPhoto.dataset.x = `${focusedOrigin.x}`;
+    focusedPhoto.dataset.y = `${focusedOrigin.y}`;
+    focusedPhoto.style.setProperty("--x", `${focusedOrigin.x}px`);
+    focusedPhoto.style.setProperty("--y", `${focusedOrigin.y}px`);
     focusedPhoto = null;
     focusedPlaceholder = null;
+    focusedOrigin = null;
     lastPhoto?.focus({ preventScroll: true });
   }, 720);
 };
