@@ -29,6 +29,7 @@ let lastPhoto = null;
 let focusedPhoto = null;
 let focusedPlaceholder = null;
 let focusedOrigin = null;
+let focusedAnimation = null;
 let isNavigating = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isMobile = window.matchMedia("(max-width: 760px)").matches;
@@ -112,7 +113,7 @@ photos.forEach((photo) => {
 
   photo.addEventListener("lostpointercapture", finishDrag);
   photo.addEventListener("click", () => {
-    if (photo.dataset.justDragged) return;
+    if (photo.dataset.justDragged || focusedPhoto) return;
     const rect = photo.getBoundingClientRect();
     const image = photo.querySelector("img");
     const layoutWidth = photo.offsetWidth;
@@ -151,6 +152,8 @@ photos.forEach((photo) => {
     focusedPlaceholder.style.height = `${layoutHeight}px`;
     photo.before(focusedPlaceholder);
     document.body.append(photo);
+    const originTransform = `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`;
+    const focusedTransform = "translate(-50%, -50%) rotate(0deg)";
     Object.assign(photo.style, {
       position: "fixed",
       left: "50%",
@@ -159,16 +162,15 @@ photos.forEach((photo) => {
       height: `${targetHeight}px`,
       maxHeight: "none",
       margin: "0",
-      transform: `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`,
+      transform: focusedTransform,
     });
+    photo.classList.add("is-focused");
+    focusedAnimation = photo.animate(
+      [{ transform: originTransform }, { transform: focusedTransform }],
+      { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
+    );
     lightbox.setAttribute("aria-hidden", "false");
     lightbox.classList.add("is-open");
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      photo.classList.add("is-focused");
-      Object.assign(photo.style, {
-        transform: "translate(-50%, -50%) rotate(0deg)",
-      });
-    }));
     closeButton.focus({ preventScroll: true });
   });
 });
@@ -203,11 +205,16 @@ const closeLightbox = () => {
   const destinationCenterX = destination.left + destination.width / 2 + focusedOrigin.x;
   const destinationCenterY = destination.top + destination.height / 2 + focusedOrigin.y;
   const destinationScale = destination.width / focusedOrigin.targetWidth;
+  const currentTransform = getComputedStyle(focusedPhoto).transform;
+  const destinationTransform = `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
-  Object.assign(focusedPhoto.style, {
-    transform: `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`,
-  });
+  focusedAnimation?.cancel();
+  focusedPhoto.style.transform = destinationTransform;
+  focusedAnimation = focusedPhoto.animate(
+    [{ transform: currentTransform }, { transform: destinationTransform }],
+    { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
+  );
   window.setTimeout(() => {
     focusedPhoto.classList.remove("is-focused");
     focusedPlaceholder.before(focusedPhoto);
@@ -220,8 +227,9 @@ const closeLightbox = () => {
     focusedPhoto = null;
     focusedPlaceholder = null;
     focusedOrigin = null;
+    focusedAnimation = null;
     lastPhoto?.focus({ preventScroll: true });
-  }, 720);
+  }, 780);
 };
 
 closeButton.addEventListener("click", closeLightbox);
