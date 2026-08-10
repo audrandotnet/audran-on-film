@@ -92,8 +92,10 @@ h1 {
   --scale: 1;
   position: relative;
   display: block;
+  justify-self: center;
+  align-self: center;
   flex: 0 0 auto;
-  width: auto;
+  width: max-content;
   max-height: 37svh;
   margin: 0;
   padding: clamp(5px, 0.55vw, 9px);
@@ -134,8 +136,7 @@ h1 {
 .gallery-photo.is-focused {
   z-index: 110;
   cursor: zoom-out;
-  transition:
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: none;
 }
 
 .gallery-photo.is-focused img {
