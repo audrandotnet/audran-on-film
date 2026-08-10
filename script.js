@@ -7,6 +7,7 @@ let isNavigating = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const isMobile = window.matchMedia("(max-width: 760px)").matches;
 const title = document.querySelector("#site-title");
 const subtitle = document.querySelector(".subtitle");
 
@@ -33,8 +34,8 @@ const enterHomepage = async () => {
   [title, subtitle, ...stamps].forEach((element) => { element.style.opacity = "0"; });
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
-  await fadeElements([title, subtitle], 1, 280, 35);
-  await fadeElements(stamps, 1, 300, 42);
+  await fadeElements([title, subtitle], 1, isMobile ? 230 : 280, isMobile ? 20 : 35);
+  await fadeElements(stamps, 1, isMobile ? 240 : 300, isMobile ? 18 : 42);
 };
 
 const openCollection = async (href) => {
@@ -42,8 +43,8 @@ const openCollection = async (href) => {
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
   document.getAnimations().forEach((animation) => animation.cancel());
-  await fadeElements(stamps, 0, 280, 14);
-  await fadeElements([title, subtitle], 0, 240, 22);
+  await fadeElements(stamps, 0, isMobile ? 230 : 280, isMobile ? 0 : 14);
+  await fadeElements([title, subtitle], 0, isMobile ? 210 : 240, isMobile ? 10 : 22);
   window.location.href = href;
 };
 
