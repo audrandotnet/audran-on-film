@@ -103,7 +103,7 @@ h1 {
   background: #f1eee7;
   cursor: zoom-in;
   transform: translate3d(var(--x), var(--y), 0) rotate(var(--angle)) scale(var(--scale));
-  transform-origin: 50% 52%;
+  transform-origin: 50% 50%;
   box-shadow: 0 18px 35px rgb(0 0 0 / 0.28);
   transition: opacity 160ms ease, transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
   touch-action: pan-x;
@@ -131,6 +131,7 @@ h1 {
 
 .gallery-photo-placeholder {
   display: block;
+  cursor: default;
 }
 
 .gallery-photo.is-focused {
