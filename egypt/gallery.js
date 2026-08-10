@@ -123,14 +123,21 @@ photos.forEach((photo) => {
     const ratio = image.naturalWidth && image.naturalHeight
       ? image.naturalWidth / image.naturalHeight
       : rect.width / rect.height;
+    const frameStyle = getComputedStyle(photo);
+    const horizontalFrame = Number.parseFloat(frameStyle.paddingLeft)
+      + Number.parseFloat(frameStyle.paddingRight);
+    const verticalFrame = Number.parseFloat(frameStyle.paddingTop)
+      + Number.parseFloat(frameStyle.paddingBottom);
     const maxWidth = window.innerWidth * (isMobile ? 0.9 : 0.84);
     const maxHeight = window.innerHeight * (isMobile ? 0.76 : 0.84);
-    let targetWidth = maxWidth;
-    let targetHeight = targetWidth / ratio;
-    if (targetHeight > maxHeight) {
-      targetHeight = maxHeight;
-      targetWidth = targetHeight * ratio;
+    let contentWidth = maxWidth - horizontalFrame;
+    let contentHeight = contentWidth / ratio;
+    if (contentHeight + verticalFrame > maxHeight) {
+      contentHeight = maxHeight - verticalFrame;
+      contentWidth = contentHeight * ratio;
     }
+    const targetWidth = contentWidth + horizontalFrame;
+    const targetHeight = contentHeight + verticalFrame;
 
     lastPhoto = photo;
     focusedPhoto = photo;
