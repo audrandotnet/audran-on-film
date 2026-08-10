@@ -189,7 +189,6 @@ const closeLightbox = () => {
   const destination = focusedPlaceholder.getBoundingClientRect();
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
-  focusedPhoto.classList.remove("is-focused");
   Object.assign(focusedPhoto.style, {
     left: `${destination.left}px`,
     top: `${destination.top}px`,
@@ -198,6 +197,7 @@ const closeLightbox = () => {
     transform: "none",
   });
   window.setTimeout(() => {
+    focusedPhoto.classList.remove("is-focused");
     focusedPlaceholder.before(focusedPhoto);
     focusedPlaceholder.remove();
     focusedPhoto.removeAttribute("style");
@@ -206,7 +206,7 @@ const closeLightbox = () => {
     focusedPhoto = null;
     focusedPlaceholder = null;
     lastPhoto?.focus({ preventScroll: true });
-  }, 520);
+  }, 720);
 };
 
 closeButton.addEventListener("click", closeLightbox);
