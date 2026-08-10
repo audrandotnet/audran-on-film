@@ -20,17 +20,16 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
     return;
   }
 
-  const animations = list.map((element, index) => element.animate(
-    [{ opacity: Number.parseFloat(getComputedStyle(element).opacity) }, { opacity: to }],
-    { duration, delay: index * stagger, easing: "cubic-bezier(0.37, 0, 0.63, 1)", fill: "both" },
+  const startingOpacities = list.map((element) => Number.parseFloat(getComputedStyle(element).opacity));
+  list.forEach((element) => { element.style.opacity = `${to}`; });
+  list.map((element, index) => element.animate(
+    [{ opacity: startingOpacities[index] }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.37, 0, 0.63, 1)", fill: "backwards" },
   ));
   await wait(duration + Math.max(0, list.length - 1) * stagger);
-  list.forEach((element) => { element.style.opacity = `${to}`; });
-  animations.forEach((animation) => animation.cancel());
 };
 
 const enterGallery = async () => {
-  document.getAnimations().forEach((animation) => animation.cancel());
   [galleryTitle, gallerySubtitle, ...photos].forEach((element) => { element.style.opacity = "0"; });
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
@@ -149,7 +148,6 @@ backLink.addEventListener("click", async (event) => {
   event.preventDefault();
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  document.getAnimations().forEach((animation) => animation.cancel());
   const departingPhotos = isMobile ? photos.slice(0, 3).reverse() : [...photos].reverse();
   await fadeElements(departingPhotos, 0, isMobile ? 210 : 250, isMobile ? 18 : 18);
   await fadeElements([gallerySubtitle, galleryTitle], 0, isMobile ? 210 : 240, isMobile ? 10 : 22);
