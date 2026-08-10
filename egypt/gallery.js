@@ -9,6 +9,7 @@ let drag = null;
 let lastPhoto = null;
 let isNavigating = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const isMobile = window.matchMedia("(max-width: 760px)").matches;
 
 const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
 
@@ -31,18 +32,31 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
 const enterGallery = async () => {
   document.getAnimations().forEach((animation) => animation.cancel());
   [galleryTitle, gallerySubtitle, ...photos].forEach((element) => { element.style.opacity = "0"; });
-  await Promise.all(photos.slice(0, 2).map(async (photo) => {
+  document.body.classList.remove("is-page-leaving");
+  document.body.classList.add("is-page-ready");
+
+  const headingAnimation = fadeElements(
+    [galleryTitle, gallerySubtitle],
+    1,
+    isMobile ? 230 : 280,
+    isMobile ? 20 : 35,
+  );
+
+  await Promise.all(photos.slice(0, isMobile ? 1 : 2).map(async (photo) => {
     const image = photo.querySelector("img");
     if (!image || image.complete) return;
     await new Promise((resolve) => {
       image.addEventListener("load", resolve, { once: true });
       image.addEventListener("error", resolve, { once: true });
+      window.setTimeout(resolve, 900);
     });
   }));
-  document.body.classList.remove("is-page-leaving");
-  document.body.classList.add("is-page-ready");
-  await fadeElements([galleryTitle, gallerySubtitle], 1, 280, 35);
-  await fadeElements(photos, 1, 320, 55);
+  await headingAnimation;
+
+  const animatedPhotos = isMobile ? photos.slice(0, 3) : photos;
+  const remainingPhotos = isMobile ? photos.slice(3) : [];
+  remainingPhotos.forEach((photo) => { photo.style.opacity = "1"; });
+  await fadeElements(animatedPhotos, 1, isMobile ? 260 : 320, isMobile ? 45 : 55);
 };
 
 const finishDrag = (event) => {
@@ -136,8 +150,9 @@ backLink.addEventListener("click", async (event) => {
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
   document.getAnimations().forEach((animation) => animation.cancel());
-  await fadeElements([...photos].reverse(), 0, 250, 18);
-  await fadeElements([gallerySubtitle, galleryTitle], 0, 240, 22);
+  const departingPhotos = isMobile ? photos.slice(0, 3).reverse() : [...photos].reverse();
+  await fadeElements(departingPhotos, 0, isMobile ? 210 : 250, isMobile ? 18 : 18);
+  await fadeElements([gallerySubtitle, galleryTitle], 0, isMobile ? 210 : 240, isMobile ? 10 : 22);
   window.location.href = backLink.href;
 });
 
