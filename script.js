@@ -20,17 +20,16 @@ const fadeElements = async (elements, to, duration, stagger = 0) => {
     return;
   }
 
-  const animations = list.map((element, index) => element.animate(
-    [{ opacity: Number.parseFloat(getComputedStyle(element).opacity) }, { opacity: to }],
-    { duration, delay: index * stagger, easing: "cubic-bezier(0.37, 0, 0.63, 1)", fill: "both" },
+  const startingOpacities = list.map((element) => Number.parseFloat(getComputedStyle(element).opacity));
+  list.forEach((element) => { element.style.opacity = `${to}`; });
+  list.map((element, index) => element.animate(
+    [{ opacity: startingOpacities[index] }, { opacity: to }],
+    { duration, delay: index * stagger, easing: "cubic-bezier(0.37, 0, 0.63, 1)", fill: "backwards" },
   ));
   await wait(duration + Math.max(0, list.length - 1) * stagger);
-  list.forEach((element) => { element.style.opacity = `${to}`; });
-  animations.forEach((animation) => animation.cancel());
 };
 
 const enterHomepage = async () => {
-  document.getAnimations().forEach((animation) => animation.cancel());
   [title, subtitle, ...stamps].forEach((element) => { element.style.opacity = "0"; });
   document.body.classList.remove("is-page-leaving");
   document.body.classList.add("is-page-ready");
@@ -42,7 +41,6 @@ const openCollection = async (href) => {
   if (isNavigating) return;
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  document.getAnimations().forEach((animation) => animation.cancel());
   await fadeElements(stamps, 0, isMobile ? 230 : 280, isMobile ? 0 : 14);
   await fadeElements([title, subtitle], 0, isMobile ? 210 : 240, isMobile ? 10 : 22);
   window.location.href = href;
