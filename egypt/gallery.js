@@ -232,20 +232,32 @@ const closeLightbox = () => {
   );
   window.setTimeout(() => {
     focusedPlaceholder.style.visibility = "visible";
-    focusedPhoto.style.visibility = "hidden";
-    focusedPhoto.classList.remove("is-focused");
-    focusedPlaceholder.before(focusedPhoto);
-    focusedPhoto.removeAttribute("style");
-    focusedPhoto.dataset.x = `${focusedOrigin.x}`;
-    focusedPhoto.dataset.y = `${focusedOrigin.y}`;
-    focusedPhoto.style.setProperty("--x", `${focusedOrigin.x}px`);
-    focusedPhoto.style.setProperty("--y", `${focusedOrigin.y}px`);
-    focusedPlaceholder.remove();
-    focusedPhoto = null;
-    focusedPlaceholder = null;
-    focusedOrigin = null;
-    focusedAnimation = null;
-    lastPhoto?.focus({ preventScroll: true });
+    focusedPlaceholder.style.opacity = "1";
+    focusedPlaceholder.animate(
+      [{ opacity: 0 }, { opacity: 1 }],
+      { duration: 140, easing: "ease-out", fill: "backwards" },
+    );
+    focusedPhoto.style.opacity = "0";
+    focusedPhoto.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 140, easing: "ease-out", fill: "backwards" },
+    );
+
+    window.setTimeout(() => {
+      focusedPhoto.classList.remove("is-focused");
+      focusedPlaceholder.before(focusedPhoto);
+      focusedPhoto.removeAttribute("style");
+      focusedPhoto.dataset.x = `${focusedOrigin.x}`;
+      focusedPhoto.dataset.y = `${focusedOrigin.y}`;
+      focusedPhoto.style.setProperty("--x", `${focusedOrigin.x}px`);
+      focusedPhoto.style.setProperty("--y", `${focusedOrigin.y}px`);
+      focusedPlaceholder.remove();
+      focusedPhoto = null;
+      focusedPlaceholder = null;
+      focusedOrigin = null;
+      focusedAnimation = null;
+      lastPhoto?.focus({ preventScroll: true });
+    }, 150);
   }, 780);
 };
 
