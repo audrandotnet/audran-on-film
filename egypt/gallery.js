@@ -147,10 +147,14 @@ photos.forEach((photo) => {
     const originCenterY = rect.top + rect.height / 2;
     const originScale = layoutWidth / targetWidth;
     focusedOrigin = { angle, x: originX, y: originY, targetWidth, targetHeight, framePadding };
-    focusedPlaceholder = document.createElement("span");
-    focusedPlaceholder.className = "gallery-photo-placeholder";
+    focusedPlaceholder = photo.cloneNode(true);
+    focusedPlaceholder.classList.add("gallery-photo-placeholder");
+    focusedPlaceholder.disabled = true;
+    focusedPlaceholder.setAttribute("aria-hidden", "true");
     focusedPlaceholder.style.width = `${layoutWidth}px`;
     focusedPlaceholder.style.height = `${layoutHeight}px`;
+    focusedPlaceholder.style.visibility = "hidden";
+    focusedPlaceholder.style.pointerEvents = "none";
     photo.before(focusedPlaceholder);
     document.body.append(photo);
     const originTransform = `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`;
@@ -207,9 +211,9 @@ document.addEventListener("pointercancel", finishDrag);
 const closeLightbox = () => {
   if (!lightbox.classList.contains("is-open") || !focusedPhoto || !focusedPlaceholder || !focusedOrigin) return;
   const destination = focusedPlaceholder.getBoundingClientRect();
-  const destinationCenterX = destination.left + destination.width / 2 + focusedOrigin.x;
-  const destinationCenterY = destination.top + destination.height / 2 + focusedOrigin.y;
-  const destinationScale = destination.width / focusedOrigin.targetWidth;
+  const destinationCenterX = destination.left + destination.width / 2;
+  const destinationCenterY = destination.top + destination.height / 2;
+  const destinationScale = focusedPlaceholder.offsetWidth / focusedOrigin.targetWidth;
   const currentTransform = getComputedStyle(focusedPhoto).transform;
   const currentPadding = getComputedStyle(focusedPhoto).paddingTop;
   const destinationTransform = `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`;
@@ -227,14 +231,16 @@ const closeLightbox = () => {
     { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
   );
   window.setTimeout(() => {
+    focusedPlaceholder.style.visibility = "visible";
+    focusedPhoto.style.visibility = "hidden";
     focusedPhoto.classList.remove("is-focused");
     focusedPlaceholder.before(focusedPhoto);
-    focusedPlaceholder.remove();
     focusedPhoto.removeAttribute("style");
     focusedPhoto.dataset.x = `${focusedOrigin.x}`;
     focusedPhoto.dataset.y = `${focusedOrigin.y}`;
     focusedPhoto.style.setProperty("--x", `${focusedOrigin.x}px`);
     focusedPhoto.style.setProperty("--y", `${focusedOrigin.y}px`);
+    focusedPlaceholder.remove();
     focusedPhoto = null;
     focusedPlaceholder = null;
     focusedOrigin = null;
