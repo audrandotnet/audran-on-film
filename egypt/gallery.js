@@ -85,7 +85,7 @@ const finishDrag = (event) => {
   if (photo.hasPointerCapture(pointerId)) photo.releasePointerCapture(pointerId);
   if (moved) {
     photo.dataset.justDragged = "true";
-    setTimeout(() => delete photo.dataset.justDragged, 0);
+    window.setTimeout(() => delete photo.dataset.justDragged, 180);
   }
 };
 
@@ -95,10 +95,10 @@ photos.forEach((photo) => {
 
   photo.addEventListener("pointerdown", (event) => {
     if (!event.isPrimary || event.button !== 0 || drag || focusedPhoto) return;
-    photo.setPointerCapture(event.pointerId);
     drag = {
       photo,
       pointerId: event.pointerId,
+      pointerType: event.pointerType,
       startX: event.clientX,
       startY: event.clientY,
       originX: Number(photo.dataset.x),
@@ -173,13 +173,14 @@ photos.forEach((photo) => {
 
 document.addEventListener("pointermove", (event) => {
   if (!drag || event.pointerId !== drag.pointerId) return;
-  if (event.pointerType === "mouse" && (event.buttons & 1) === 0) return finishDrag(event);
+  if (drag.pointerType === "mouse" && (event.buttons & 1) === 0) return finishDrag(event);
 
   const dx = event.clientX - drag.startX;
   const dy = event.clientY - drag.startY;
   if (!drag.moved && Math.hypot(dx, dy) < 5) return;
   if (!drag.moved) {
     drag.moved = true;
+    drag.photo.setPointerCapture(event.pointerId);
     drag.photo.classList.add("is-dragging");
   }
 
