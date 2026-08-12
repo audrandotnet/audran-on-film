@@ -110,6 +110,8 @@ h1 {
 }
 
 .gallery-photo:nth-child(3n + 2) { margin-top: 2vh; }
+.gallery-photo:nth-child(n + 3) { margin-left: clamp(-2.6rem, -2.8vw, -1.25rem); }
+.gallery-photo:nth-child(even) { margin-bottom: clamp(-1.6rem, -1.8vh, -0.7rem); }
 .gallery-photo:nth-child(6n + 1) { --angle: -2.2deg; }
 .gallery-photo:nth-child(6n + 2) { --angle: 1.4deg; }
 .gallery-photo:nth-child(6n + 3) { --angle: 2.6deg; }
@@ -229,6 +231,10 @@ h1 {
     margin: 0 auto;
     touch-action: none;
   }
+
+  .gallery-photo:nth-child(n + 3) { margin-top: -1.35rem; }
+  .gallery-photo:nth-child(even) { margin-left: -0.7rem; }
+  .gallery-photo:nth-child(odd) { margin-right: -0.7rem; }
 
   .gallery-photo img { width: 100%; max-width: none; max-height: none; }
   .lightbox { padding: 1rem; }
