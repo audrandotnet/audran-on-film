@@ -20,6 +20,7 @@ const closeButton = document.querySelector(".lightbox__close");
 const backLink = document.querySelector(".gallery-back");
 const galleryTitle = document.querySelector(".gallery-heading h1");
 const gallerySubtitle = document.querySelector(".gallery-heading p");
+const galleryGrid = document.querySelector(".gallery-grid");
 let drag = null;
 let lastPhoto = null;
 let focusedPhoto = null;
@@ -146,6 +147,7 @@ photos.forEach((photo) => {
     focusedPhoto.disabled = true;
     focusedPhoto.setAttribute("aria-hidden", "true");
     document.body.append(focusedPhoto);
+    galleryGrid.classList.add("has-zoomed-photo");
     photo.classList.add("is-zoom-source");
     photo.style.visibility = "hidden";
     const originTransform = `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`;
@@ -227,6 +229,7 @@ const closeLightbox = () => {
       requestAnimationFrame(() => {
         focusedPhoto.remove();
         lastPhoto.classList.remove("is-zoom-source");
+        galleryGrid.classList.remove("has-zoomed-photo");
         focusedPhoto = null;
         focusedOrigin = null;
         focusedAnimation = null;
