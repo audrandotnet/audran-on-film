@@ -121,7 +121,6 @@ photos.forEach((photo) => {
       ? image.naturalWidth / image.naturalHeight
       : rect.width / rect.height;
     const frameStyle = getComputedStyle(photo);
-    const framePadding = Number.parseFloat(frameStyle.paddingTop);
     const horizontalFrame = Number.parseFloat(frameStyle.paddingLeft)
       + Number.parseFloat(frameStyle.paddingRight);
     const verticalFrame = Number.parseFloat(frameStyle.paddingTop)
@@ -140,8 +139,8 @@ photos.forEach((photo) => {
     lastPhoto = photo;
     const originCenterX = rect.left + rect.width / 2;
     const originCenterY = rect.top + rect.height / 2;
-    const originScale = layoutWidth / targetWidth;
-    focusedOrigin = { angle, x: originX, y: originY, targetWidth, targetHeight, framePadding };
+    const targetScale = targetWidth / layoutWidth;
+    focusedOrigin = { angle, x: originX, y: originY, layoutWidth, layoutHeight, targetScale };
     focusedPhoto = photo.cloneNode(true);
     focusedPhoto.classList.add("is-focused");
     focusedPhoto.disabled = true;
@@ -150,24 +149,20 @@ photos.forEach((photo) => {
     galleryGrid.classList.add("has-zoomed-photo");
     photo.classList.add("is-zoom-source");
     photo.style.visibility = "hidden";
-    const originTransform = `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`;
-    const focusedTransform = "translate(-50%, -50%) rotate(0deg)";
+    const originTransform = `translate(-50%, -50%) rotate(${angle})`;
+    const focusedTransform = `translate(-50%, -50%) translate(${window.innerWidth / 2 - originCenterX}px, ${window.innerHeight / 2 - originCenterY}px) scale(${targetScale}) rotate(0deg)`;
     Object.assign(focusedPhoto.style, {
       position: "fixed",
-      left: "50%",
-      top: "50%",
-      width: `${targetWidth}px`,
-      height: `${targetHeight}px`,
+      left: `${originCenterX}px`,
+      top: `${originCenterY}px`,
+      width: `${layoutWidth}px`,
+      height: `${layoutHeight}px`,
       maxHeight: "none",
       margin: "0",
-      padding: `${framePadding}px`,
       transform: focusedTransform,
     });
     focusedAnimation = focusedPhoto.animate(
-      [
-        { transform: originTransform, padding: `${framePadding / originScale}px` },
-        { transform: focusedTransform, padding: `${framePadding}px` },
-      ],
+      [{ transform: originTransform }, { transform: focusedTransform }],
       { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
     );
     lightbox.setAttribute("aria-hidden", "false");
@@ -203,23 +198,18 @@ document.addEventListener("pointercancel", finishDrag);
 const closeLightbox = () => {
   if (!lightbox.classList.contains("is-open") || !focusedPhoto || !lastPhoto || !focusedOrigin) return;
   const destination = lastPhoto.getBoundingClientRect();
+  const currentTransform = getComputedStyle(focusedPhoto).transform;
   const destinationCenterX = destination.left + destination.width / 2;
   const destinationCenterY = destination.top + destination.height / 2;
-  const destinationScale = lastPhoto.offsetWidth / focusedOrigin.targetWidth;
-  const currentTransform = getComputedStyle(focusedPhoto).transform;
-  const currentPadding = getComputedStyle(focusedPhoto).paddingTop;
-  const destinationTransform = `translate(-50%, -50%) translate(${destinationCenterX - window.innerWidth / 2}px, ${destinationCenterY - window.innerHeight / 2}px) scale(${destinationScale}) rotate(${focusedOrigin.angle})`;
-  const destinationPadding = focusedOrigin.framePadding / destinationScale;
+  const deltaX = destinationCenterX - Number.parseFloat(focusedPhoto.style.left);
+  const deltaY = destinationCenterY - Number.parseFloat(focusedPhoto.style.top);
+  const destinationTransform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px) scale(1) rotate(${focusedOrigin.angle})`;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   focusedAnimation?.cancel();
   focusedPhoto.style.transform = destinationTransform;
-  focusedPhoto.style.padding = `${destinationPadding}px`;
   focusedAnimation = focusedPhoto.animate(
-    [
-      { transform: currentTransform, padding: currentPadding },
-      { transform: destinationTransform, padding: `${destinationPadding}px` },
-    ],
+    [{ transform: currentTransform }, { transform: destinationTransform }],
     { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
   );
   focusedAnimation.finished.catch(() => {}).then(() => {
