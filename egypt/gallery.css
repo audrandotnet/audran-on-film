@@ -116,7 +116,7 @@ h1 {
 .gallery-photo:nth-child(6n + 4) { --angle: -1.1deg; }
 .gallery-photo:nth-child(6n + 5) { --angle: 1.9deg; }
 .gallery-photo:nth-child(6n) { --angle: -2.7deg; }
-.gallery-photo:hover:not(.is-zoom-source) { --scale: 1.006; z-index: 4; }
+.gallery-photo:hover:not(.is-zoom-source):not(.is-focused) { --scale: 1.006; z-index: 4; }
 .gallery-photo.is-zoom-source { --scale: 1; }
 .gallery-photo:focus-visible { z-index: 4; outline: 1px solid rgb(255 255 255 / 0.45); outline-offset: 3px; }
 .gallery-photo.is-dragging { --scale: 1.018; z-index: 20; cursor: grabbing; transition: opacity 100ms ease; }
@@ -137,9 +137,11 @@ h1 {
 }
 
 .gallery-photo.is-focused {
+  --scale: 1;
   z-index: 110;
   cursor: zoom-out;
   transition: none;
+  pointer-events: none;
 }
 
 .gallery-photo.is-focused img {
