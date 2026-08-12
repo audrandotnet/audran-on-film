@@ -150,6 +150,7 @@ photos.forEach((photo) => {
     focusedPhoto.disabled = true;
     focusedPhoto.setAttribute("aria-hidden", "true");
     document.body.append(focusedPhoto);
+    photo.classList.add("is-zoom-source");
     photo.style.visibility = "hidden";
     const originTransform = `translate(-50%, -50%) translate(${originCenterX - window.innerWidth / 2}px, ${originCenterY - window.innerHeight / 2}px) scale(${originScale}) rotate(${angle})`;
     const focusedTransform = "translate(-50%, -50%) rotate(0deg)";
@@ -224,12 +225,17 @@ const closeLightbox = () => {
     { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
   );
   focusedAnimation.finished.catch(() => {}).then(() => {
-    lastPhoto.style.visibility = "visible";
-    focusedPhoto.remove();
-    focusedPhoto = null;
-    focusedOrigin = null;
-    focusedAnimation = null;
-    lastPhoto.focus({ preventScroll: true });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      lastPhoto.style.visibility = "visible";
+      focusedPhoto.style.visibility = "hidden";
+      requestAnimationFrame(() => {
+        focusedPhoto.remove();
+        lastPhoto.classList.remove("is-zoom-source");
+        focusedPhoto = null;
+        focusedOrigin = null;
+        focusedAnimation = null;
+      });
+    }));
   });
 };
 
