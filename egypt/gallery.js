@@ -74,10 +74,7 @@ const enterGallery = async () => {
   }));
   await headingAnimation;
 
-  const animatedPhotos = isMobile ? photos.slice(0, 3) : photos;
-  const remainingPhotos = isMobile ? photos.slice(3) : [];
-  remainingPhotos.forEach((photo) => { photo.style.opacity = "1"; });
-  await fadeElements(animatedPhotos, 1, isMobile ? 260 : 320, isMobile ? 45 : 55);
+  await fadeElements(photos, 1, isMobile ? 240 : 320, isMobile ? 28 : 55);
 };
 
 const finishDrag = (event) => {
@@ -256,7 +253,7 @@ backLink.addEventListener("click", async (event) => {
   event.preventDefault();
   isNavigating = true;
   document.body.classList.add("is-page-leaving");
-  const departingPhotos = isMobile ? photos.slice(0, 3).reverse() : [...photos].reverse();
+  const departingPhotos = [...photos].reverse();
   await fadeElements(departingPhotos, 0, isMobile ? 210 : 250, isMobile ? 18 : 18);
   await fadeElements([gallerySubtitle, galleryTitle], 0, isMobile ? 210 : 240, isMobile ? 10 : 22);
   window.location.href = backLink.href;
