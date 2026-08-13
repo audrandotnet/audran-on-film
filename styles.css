@@ -32,28 +32,13 @@ html { background: var(--black); }
 body {
   overflow: hidden;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 74% 45%, #151515 0%, transparent 38%),
-    var(--black);
+  background: var(--black);
   font-family: "Montserrat", Arial, sans-serif;
 }
 
 body.is-collection {
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  content: "";
-  opacity: 0.16;
-  background:
-    repeating-radial-gradient(circle at 17% 29%, transparent 0 1px, rgb(255 255 255 / 0.06) 1px 2px, transparent 2px 5px),
-    repeating-radial-gradient(circle at 73% 61%, transparent 0 2px, rgb(255 255 255 / 0.04) 2px 3px, transparent 3px 7px);
-  background-size: 89px 83px, 71px 97px;
 }
 
 .home {
