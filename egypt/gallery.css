@@ -243,7 +243,6 @@ h1 {
   }
 
   .gallery-grid .gallery-photo:nth-child(even) { grid-column: 6 / span 7; }
-  .gallery-grid .gallery-photo:nth-child(3n) { grid-column: 2 / span 7; }
   .gallery-grid .gallery-photo:nth-child(n + 2) { margin-top: clamp(-1.8rem, -6vw, -1.15rem); }
   .gallery-grid .gallery-photo:nth-child(1) { z-index: 9; }
   .gallery-grid .gallery-photo:nth-child(2) { z-index: 2; }
@@ -256,6 +255,12 @@ h1 {
   .gallery-grid .gallery-photo:nth-child(9) { z-index: 3; }
 
   .gallery-grid .gallery-photo img { width: 100%; max-width: none; max-height: none; }
+  .gallery-photo.is-focused img {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    max-height: none;
+  }
   .lightbox { padding: 1rem; }
   .lightbox__image { max-width: 92vw; max-height: 82svh; }
 }
