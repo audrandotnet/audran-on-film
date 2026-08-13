@@ -111,7 +111,7 @@ photos.forEach((photo) => {
   });
 
   photo.addEventListener("lostpointercapture", finishDrag);
-  photo.addEventListener("click", () => {
+  const openPhoto = () => {
     if (photo.dataset.justDragged || focusedPhoto) return;
     const rect = photo.getBoundingClientRect();
     const image = photo.querySelector("img");
@@ -171,7 +171,13 @@ photos.forEach((photo) => {
     lightbox.setAttribute("aria-hidden", "false");
     lightbox.classList.add("is-open");
     closeButton.focus({ preventScroll: true });
+  };
+
+  photo.addEventListener("click", () => {
+    openPhoto();
   });
+
+  photo.openFromPointer = openPhoto;
 });
 
 document.addEventListener("pointermove", (event) => {
@@ -196,7 +202,12 @@ document.addEventListener("pointermove", (event) => {
   drag.photo.style.setProperty("--y", `${y}px`);
 }, { passive: false });
 
-document.addEventListener("pointerup", finishDrag);
+document.addEventListener("pointerup", (event) => {
+  if (!drag || event.pointerId !== drag.pointerId) return;
+  const { photo, moved, pointerType } = drag;
+  finishDrag(event);
+  if (!moved && pointerType !== "mouse") photo.openFromPointer();
+});
 document.addEventListener("pointercancel", finishDrag);
 
 const closeLightbox = () => {
