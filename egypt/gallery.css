@@ -234,9 +234,11 @@ h1 {
   .gallery-photo,
   .gallery-photo:nth-child(n) {
     grid-column: 1 / span 7;
+    grid-row: auto;
     width: 100%;
     max-height: none;
     margin: 0;
+    z-index: auto;
     touch-action: none;
   }
 
