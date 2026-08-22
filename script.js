@@ -25,7 +25,7 @@ const egyptPreviewUrls = [
 const previewBurst = document.createElement("div");
 previewBurst.className = "stamp-burst";
 previewBurst.setAttribute("aria-hidden", "true");
-egyptPreviewUrls.forEach((src, index) => {
+egyptPreviewUrls.slice(0, 5).forEach((src, index) => {
   const image = document.createElement("img");
   image.className = "stamp-burst__photo";
   image.src = src;
@@ -33,7 +33,7 @@ egyptPreviewUrls.forEach((src, index) => {
   image.decoding = "async";
   image.loading = "eager";
   image.style.setProperty("--burst-delay", `${index * 32}ms`);
-  image.style.setProperty("--burst-out-delay", `${(egyptPreviewUrls.length - index - 1) * 12}ms`);
+  image.style.setProperty("--burst-out-delay", `${(4 - index) * 12}ms`);
   previewBurst.append(image);
 });
 tabletop.append(previewBurst);
