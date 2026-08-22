@@ -147,7 +147,7 @@ h1 {
   left: 0;
   bottom: 0;
   display: block;
-  width: clamp(82px, 8.5vw, 138px);
+  width: clamp(96px, 9.8vw, 158px);
   height: auto;
   padding: 0;
   border: clamp(3px, 0.28vw, 5px) solid #f1eee7;
@@ -445,7 +445,7 @@ h1 {
   }
 
   .stamp-burst__photo {
-    width: clamp(58px, 17vw, 80px);
+    width: clamp(68px, 20vw, 94px);
     border-width: 3px;
   }
 
