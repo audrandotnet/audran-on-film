@@ -1,18 +1,22 @@
-const galleryMediaRoot = "https://pub-d67d03737e7a4a24a4c9c9dea3878bdf.r2.dev/galleries/egypte";
+const galleryGrid = document.querySelector(".gallery-grid");
+const galleryMediaRoot = galleryGrid.dataset.mediaRoot;
+const galleryPhotoCount = Number(galleryGrid.dataset.photoCount);
+const galleryPhotoAlt = galleryGrid.dataset.photoAlt;
 const placeholderUrls = Array.from(
-  { length: 15 },
+  { length: galleryPhotoCount },
   (_, index) => `${galleryMediaRoot}/photos/${String(index + 1).padStart(2, "0")}.jpg`,
 );
 const photoNodes = [...document.querySelectorAll(".gallery-photo")];
 photoNodes.slice(placeholderUrls.length).forEach((photo) => photo.remove());
 const photos = photoNodes.slice(0, placeholderUrls.length);
+galleryGrid.style.setProperty("--gallery-columns", galleryPhotoCount <= 8 ? 5 : galleryPhotoCount <= 12 ? 6 : 8);
 photos.forEach((photo, index) => {
   const image = photo.querySelector("img");
   const updateOrientation = () => {
     photo.classList.toggle("is-portrait", image.naturalHeight > image.naturalWidth);
   };
   image.src = placeholderUrls[index];
-  image.alt = `Égypte, août 2025 — photographie ${String(index + 1).padStart(2, "0")}`;
+  image.alt = `${galleryPhotoAlt} — photographie ${String(index + 1).padStart(2, "0")}`;
   if (image.complete) updateOrientation();
   else image.addEventListener("load", updateOrientation, { once: true });
 });
@@ -22,7 +26,6 @@ const closeButton = document.querySelector(".lightbox__close");
 const backLink = document.querySelector(".gallery-back");
 const galleryTitle = document.querySelector(".gallery-heading h1");
 const gallerySubtitle = document.querySelector(".gallery-heading p");
-const galleryGrid = document.querySelector(".gallery-grid");
 let drag = null;
 let lastPhoto = null;
 let focusedPhoto = null;
