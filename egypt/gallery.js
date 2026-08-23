@@ -8,8 +8,13 @@ photoNodes.slice(placeholderUrls.length).forEach((photo) => photo.remove());
 const photos = photoNodes.slice(0, placeholderUrls.length);
 photos.forEach((photo, index) => {
   const image = photo.querySelector("img");
+  const updateOrientation = () => {
+    photo.classList.toggle("is-portrait", image.naturalHeight > image.naturalWidth);
+  };
   image.src = placeholderUrls[index];
   image.alt = `Égypte, août 2025 — photographie ${String(index + 1).padStart(2, "0")}`;
+  if (image.complete) updateOrientation();
+  else image.addEventListener("load", updateOrientation, { once: true });
 });
 const lightbox = document.querySelector(".lightbox");
 const lightboxImage = document.querySelector(".lightbox__image");
