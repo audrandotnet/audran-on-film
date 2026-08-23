@@ -11,27 +11,28 @@ const isMobile = window.matchMedia("(max-width: 760px)").matches;
 const title = document.querySelector("#site-title");
 const subtitle = document.querySelector(".subtitle");
 
-const mediaRoot = "https://pub-d67d03737e7a4a24a4c9c9dea3878bdf.r2.dev/galleries/egypte";
-const egyptPreviewUrls = Array.from(
-  { length: 5 },
-  (_, index) => `${mediaRoot}/photos/${String(index + 1).padStart(2, "0")}.jpg`,
-);
-
 const previewBurst = document.createElement("div");
 previewBurst.className = "stamp-burst";
 previewBurst.setAttribute("aria-hidden", "true");
-egyptPreviewUrls.slice(0, 5).forEach((src, index) => {
-  const image = document.createElement("img");
-  image.className = "stamp-burst__photo";
-  image.src = src;
-  image.alt = "";
-  image.decoding = "async";
-  image.loading = "eager";
-  image.style.setProperty("--burst-delay", `${index * 32}ms`);
-  image.style.setProperty("--burst-out-delay", `${(4 - index) * 12}ms`);
-  previewBurst.append(image);
-});
 tabletop.append(previewBurst);
+
+const loadPreviewBurst = (stamp) => {
+  const root = stamp.dataset.previewRoot;
+  if (!root || previewBurst.dataset.root === root) return;
+  previewBurst.replaceChildren();
+  previewBurst.dataset.root = root;
+  Array.from({ length: 5 }, (_, index) => `${root}/${String(index + 1).padStart(2, "0")}.jpg`).forEach((src, index) => {
+    const image = document.createElement("img");
+    image.className = "stamp-burst__photo";
+    image.src = src;
+    image.alt = "";
+    image.decoding = "async";
+    image.loading = "eager";
+    image.style.setProperty("--burst-delay", `${index * 32}ms`);
+    image.style.setProperty("--burst-out-delay", `${(4 - index) * 12}ms`);
+    previewBurst.append(image);
+  });
+};
 
 const positionPreviewBurst = (stamp) => {
   previewBurst.style.left = `${stamp.offsetLeft + stamp.offsetWidth / 2}px`;
@@ -40,6 +41,7 @@ const positionPreviewBurst = (stamp) => {
 
 const showPreviewBurst = (stamp) => {
   if (!stamp.classList.contains("stamp--collection")) return;
+  loadPreviewBurst(stamp);
   positionPreviewBurst(stamp);
   previewBurst.style.zIndex = `${Math.max(1, Number(stamp.style.zIndex || topLayer) - 1)}`;
   previewBurst.classList.add("is-visible");
