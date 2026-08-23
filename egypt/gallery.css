@@ -74,7 +74,7 @@ h1 {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(8, 29vw);
+  grid-template-columns: repeat(var(--gallery-columns, 8), 29vw);
   grid-template-rows: repeat(2, 42svh);
   flex: 0 0 auto;
   align-items: center;
