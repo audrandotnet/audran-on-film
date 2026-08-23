@@ -147,7 +147,7 @@ h1 {
   left: 0;
   bottom: 0;
   display: block;
-  width: clamp(96px, 9.8vw, 158px);
+  width: clamp(108px, 11.5vw, 180px);
   height: auto;
   padding: 0;
   border: clamp(3px, 0.28vw, 5px) solid #f1eee7;
@@ -163,11 +163,11 @@ h1 {
   will-change: transform, opacity;
 }
 
-.stamp-burst__photo:nth-child(1) { --burst-x: -82px; --burst-y: -42px; --burst-angle: -12deg; }
-.stamp-burst__photo:nth-child(2) { --burst-x: -43px; --burst-y: -78px; --burst-angle: -6deg; }
-.stamp-burst__photo:nth-child(3) { --burst-x: 0px; --burst-y: -98px; --burst-angle: 0deg; }
-.stamp-burst__photo:nth-child(4) { --burst-x: 43px; --burst-y: -78px; --burst-angle: 6deg; }
-.stamp-burst__photo:nth-child(5) { --burst-x: 82px; --burst-y: -42px; --burst-angle: 12deg; }
+.stamp-burst__photo:nth-child(1) { --burst-x: -90px; --burst-y: -46px; --burst-angle: -12deg; }
+.stamp-burst__photo:nth-child(2) { --burst-x: -48px; --burst-y: -84px; --burst-angle: -6deg; }
+.stamp-burst__photo:nth-child(3) { --burst-x: 0px; --burst-y: -106px; --burst-angle: 0deg; }
+.stamp-burst__photo:nth-child(4) { --burst-x: 48px; --burst-y: -84px; --burst-angle: 6deg; }
+.stamp-burst__photo:nth-child(5) { --burst-x: 90px; --burst-y: -46px; --burst-angle: 12deg; }
 
 .stamp-burst.is-visible .stamp-burst__photo {
   opacity: 1;
@@ -185,7 +185,7 @@ h1 {
   --stamp-scale: 1;
   position: absolute;
   z-index: 1;
-  width: clamp(118px, 12.5vw, 205px);
+  width: clamp(132px, 14vw, 228px);
   margin: 0;
   cursor: grab;
   touch-action: none;
@@ -445,18 +445,18 @@ h1 {
   }
 
   .stamp-burst__photo {
-    width: clamp(68px, 20vw, 94px);
+    width: clamp(82px, 25vw, 116px);
     border-width: 3px;
   }
 
-  .stamp-burst__photo:nth-child(1) { --burst-x: -43px; --burst-y: -25px; }
-  .stamp-burst__photo:nth-child(2) { --burst-x: -23px; --burst-y: -51px; }
-  .stamp-burst__photo:nth-child(3) { --burst-x: 0px; --burst-y: -67px; }
-  .stamp-burst__photo:nth-child(4) { --burst-x: 23px; --burst-y: -51px; }
-  .stamp-burst__photo:nth-child(5) { --burst-x: 43px; --burst-y: -25px; }
+  .stamp-burst__photo:nth-child(1) { --burst-x: -50px; --burst-y: -29px; }
+  .stamp-burst__photo:nth-child(2) { --burst-x: -27px; --burst-y: -59px; }
+  .stamp-burst__photo:nth-child(3) { --burst-x: 0px; --burst-y: -78px; }
+  .stamp-burst__photo:nth-child(4) { --burst-x: 27px; --burst-y: -59px; }
+  .stamp-burst__photo:nth-child(5) { --burst-x: 50px; --burst-y: -29px; }
 
   .stamp {
-    width: clamp(104px, 31vw, 155px);
+    width: clamp(122px, 36vw, 178px);
   }
 
   .stamp--one { left: 5%; top: 5%; }
