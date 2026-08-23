@@ -145,6 +145,14 @@ h1 {
   user-select: none;
 }
 
+.gallery-photo.is-portrait {
+  max-height: 52svh;
+}
+
+.gallery-photo.is-portrait img {
+  max-height: calc(52svh - 18px);
+}
+
 .gallery-photo-placeholder {
   display: block;
   cursor: default;
@@ -249,6 +257,13 @@ h1 {
   }
 
   .gallery-grid .gallery-photo:nth-child(even) { grid-column: 6 / span 7; }
+  .gallery-grid .gallery-photo.is-portrait {
+    width: 88%;
+    max-height: none;
+    justify-self: center;
+  }
+  .gallery-grid .gallery-photo.is-portrait:nth-child(odd) { grid-column: 1 / span 6; }
+  .gallery-grid .gallery-photo.is-portrait:nth-child(even) { grid-column: 7 / span 6; }
   .gallery-grid .gallery-photo:nth-child(n + 2) { margin-top: clamp(-1.8rem, -6vw, -1.15rem); }
   .gallery-grid .gallery-photo:nth-child(1) { z-index: 9; }
   .gallery-grid .gallery-photo:nth-child(2) { z-index: 2; }
@@ -261,6 +276,7 @@ h1 {
   .gallery-grid .gallery-photo:nth-child(9) { z-index: 3; }
 
   .gallery-grid .gallery-photo img { width: 100%; max-width: none; max-height: none; }
+  .gallery-grid .gallery-photo.is-portrait img { max-height: none; }
   .gallery-photo.is-focused img {
     width: 100%;
     max-width: none;
