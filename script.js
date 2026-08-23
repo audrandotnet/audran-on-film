@@ -11,16 +11,11 @@ const isMobile = window.matchMedia("(max-width: 760px)").matches;
 const title = document.querySelector("#site-title");
 const subtitle = document.querySelector(".subtitle");
 
-const egyptPreviewUrls = [
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXj4NjNvBN9HhCIhe_CSayoCVZsLwOuGszCP3v0zwAZtKTJ4LESyGMEq4VmSITTVrofZv2A1dRWk2Rf2JG8tkZYN8bCsSbG9fyDW6IQONvt12Q7CgxLgeF4lmYA8-oW4mqPP_5cQWj8MrAfurdHBWZlvZcnePCFVOitfdStB-yyJNeQ9tk27LCkcEPPuCanElnCuiKSiCfjfsGp_x4NaLvG3zGuRD_QVqU-dp2P0pI=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXUBK2jJmJe6WVPDuBX7olxNtkUWQTV8iXonzC3VPaU7XMq6ffGDCsmwYPqh81DILb_8HQlxNMlkmR-DEAeS0TcKbcZ74ASRaMcbuXlCRW8vJ8LseKB-jy4WScFDTVA47EQ6EMX0W2nUQcYFVSl5BA8QyhJoklRpXQzt8aF0LGMmJNf9zTZLk6nhY73fZi62zFdBIK-8lsOzJ-v3sC_DiWgasCOe_KjouPzdmJE=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVlO9nakkEH9ppV_S28iVN7uiV28t2WM_GTEX3nMm5rbat3euUrlRk4zXPBEr8v9L8lMmAq5wRSmRlJsaUudu8UhWztL7_rObgPrf92s_beI69Rj9Ioa13Ryn9bpWhW-8_mC9NvjgUso7-O0yiA-a6qpi4EUzDMl6OcQEfNk_Y9Qh1DSi1JzrR2TuFIaL2a_MmtAjPKhLL39vpKMS2uZtezoQZ-n6V8lNFan6jmlXs=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQWAmqnlkGtTFuLFs4CB3VV8XsJ9F2iD6sSZGpaqdSpYOLZghmd1cFCsZtIMypeBOu8avuEP5u8kUWG3CSNX7RHuDLXMlUfHTdhEqjSnvgAHSwqItIWNqOxd93BMxh_WQzEchrgFPVPnH_MD9vDdp4E97ThkMNo9A63Fx2uvKj8h5gVEsxjCTPWHUvxXrQsxxghJOFMmm8U46WeeHrLKBGOxa1TCOek9cBJknWl04Hs=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXI5qvNlUv6E_d6d_9DnJfJWLrZqsIkRnUitZeHn3AybddpnnQtyYCi_Gx12inru0PcHAKo-ZyBcawMQxNVfi85QK1GVboquDJ6TSvxSTt3k5qyl5sREp1LKFYkcEPm7wD8kmyhHikciaW0aiUYV-MQUef0tHzg3wsySJ7cnccsqnseYZkNIWwL4PMJJCIWIfStCu31oVjODmmGltxj4UkQNL0qdMD2ClctvDjikUQ=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXk1ytIEb-jOVSxfB812TFuZtH2YiFSlOobJjsIJqzlY0HxG9YvIO1izCqu8dXuqoiL3XtKEJVcxs1qxbT4WPx8YU3bqSYjTqsjF_PZ_4Iw7rVmkr6-XpMT2N4R8adeZyaBN2-t0EfiW4kxh5PX0hESigPbd9uPIQ7GCGU2grU3d2WGyhHVF6Er47jJN6q7OF9Yc5_QA-YTfMfUMKm55UjdXCcUMtd9zsFXRBhelMM=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXfI5WdUH1tGfY5I98I1fLO5eM456CZfR7qVq4NW3siMej2G4aZJuisxYLvDElvMO-3FOc2S6YHnrxy02V2LYqzJsmzlT6Rnw8xZyywvR8-ciiNSLKNOycsBxp1XXfXlxKTtk6M_2Lqq1PwKy5-HV_OVnTZbUl9NX01KuxBNkSQPxA6FL3JG1kLlpLsQpHbYl5BrDcAekBM6vqxL9hDoSyfZckLNzNEmLM0DETa=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVtYJYPuQ1U-srNQPEGJRvYlE7s5FCHyrH_rzKxteJPHlhAudQ5cdsNwadxwOe7DfeIRnDZCtHPDoqFWSNYXIbs9Au9TNLaPwntZAO5CPKTGDJ_-Dya82sR9Q5qBxx1TkB2acCH4OLs0R4T0M4jgnNvouJIyzGWYWKIOSwcxtc8Y7omhH_f_asXDI50vqy_J7PKzMUx0fxbGEnghKTb3hQndwURvo9vg35eqw04=w1280",
-];
+const mediaRoot = "https://pub-d67d03737e7a4a24a4c9c9dea3878bdf.r2.dev/galleries/egypte";
+const egyptPreviewUrls = Array.from(
+  { length: 5 },
+  (_, index) => `${mediaRoot}/photos/${String(index + 1).padStart(2, "0")}.jpg`,
+);
 
 const previewBurst = document.createElement("div");
 previewBurst.className = "stamp-burst";
