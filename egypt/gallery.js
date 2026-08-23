@@ -9,7 +9,7 @@ const placeholderUrls = Array.from(
 const photoNodes = [...document.querySelectorAll(".gallery-photo")];
 photoNodes.slice(placeholderUrls.length).forEach((photo) => photo.remove());
 const photos = photoNodes.slice(0, placeholderUrls.length);
-galleryGrid.style.setProperty("--gallery-columns", galleryPhotoCount <= 8 ? 5 : galleryPhotoCount <= 12 ? 6 : 8);
+galleryGrid.style.setProperty("--gallery-columns", galleryPhotoCount <= 8 ? 5 : galleryPhotoCount <= 12 ? 6 : galleryPhotoCount <= 15 ? 8 : 9);
 photos.forEach((photo, index) => {
   const image = photo.querySelector("img");
   const updateOrientation = () => {
