@@ -1,14 +1,8 @@
-const placeholderUrls = [
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQUe8fjhUfGyXK6J331eLm2GdSftvF2akO24OzYevwL7yQJn2F3UbpQLZrLyOZ-pOjFsN-azN_cDHNXfxXSV4LxcDelEpHJdWcS9badcUZELdQBv-sXWBGlLI03GfhNgKK3r6Npw5WqEyjuJv8e-XsVlgoHfiuBfICVquMuOwyPucrfkfyt2RnxKK6eOsVR0UrIQUU_ZFLLztx-Y9fhC0jobEjnIcTEIeOZnCG4KHME=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQX2F-xIlhQXEEoGpAl4LYAVQKGPiTVkyziL4xDZXkWyZktpAwZa07HU1boX_jEWnWIbZLM28i1EXh7z2Kwhwnd975qT3hOSJC8y0wkqop7nVoNWEGzqMjlrPZEMAFmQesnld-goVR6b0utAKFhaR7C_Oi7lvTaXKkyNU2qQsuQdUVQZEWcRKRDQOWdf_GOvVoGKvUE2xZkZfSDqqT-Qm_isCvp9SlEvWGh1Owye=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQUQt0fMtIEcCfV1zBzjPRVsqM2CsSFSyk_3JRRSGmfNn9o6edMLrc1XYLU2u6r8tfFwtZ0M45gp6AwaoMAz8tRS2mq8jUq4WjZlR2rkCehQ82q-PC8UO5vvlyC14u-MlzwyfAF3ai1mogqaMwuBfCdWtonofE_lvNto7Yybi1VGDt_4lyAyK0LNiAavqlfMLOpP-S-L06giMlfiA8Bf_dvM-WYXalyd8hFj4j8isUk=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQUFc48ZmPIrFisoIaEovYrWR2goAnh9zj2-rYCkX7HxP6DxTDL-_EcZYmWSxZbpqrcG8wB3kJCLYtKWPLD_lz4_giSuTC7pR1ND05ZSr_hlWRUWz6tSJWgIzJD4duKXQ9iRdT2oN5e_Sv26FYQwwJS4uZWFvm6g2peaN8NcZ6fEIFoXMtoX1q7K8_xeAPNVys0XlOVvOEFgtrZqRNTerQ37DmisLmxchT_tvPWxRHc=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVLmSkeBGW_FO60hk87eQDocnRKUg143AJkPUW-B4UefWtSfm3hmuOnGdbQ_wdNjEmvj3hZ5jDXml5U7ke39HHzWqmAKKjcZmC12gvbaCsBq1LS0NLKmQ1IWmYKNQJbTMyw8979mydlv0jAgdMVBJYP98hwuQfsDhtu9q1d9fl-nR4iSlnfxqHrkilWqTsHotZGuxOKk0UaY2qg2K2b_8rFaaaccAG5ogBHzM4-IWY=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQXFEIQetFkWKyPA_Ba5B50hlpGX-myLYJim1FVqx_-z3tRVeIrtUwe5LNLoIlznoP_EfcA-B-FKzX8VlqI59aOIdDOVpwgcW0LzqjER60eFerx9EtWe3OycrR4Beqsow0XgbSncZ2vJCo071f_zuH-A8K8hZRr0_mQLPERswcNQZG_VDYD0Z8_W9yDY3SaY_RglpPaJZgRwPv_ltO2Tc15iJagOEkXnYQ3lnpRltDA=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVqOWx5dnKbfe3pBKeMrYycXASDl-zwOvzHT3RC101-e7Nx1KsoiaaPn6BrMHYZiw9eubJ6OlrQWVbu55MUbpXb4IqXTYAFXU7J1kdUKGYvsWU5ZbjTNXQVnVcQ40X60s5jtPDNTjeKXNXgSHWOKzCeN4iIUE9uYFQFmuBpNAFpb796q2kwBmUbDPLw45n8ops8tf1RB1lNq5bnqNUNfVMUWwkMTgGCpx5b4tp8=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVQgjVbXj75lGYyB3pvRtcjP2bgPFJrqKGCr2T5te1f1zqpG-I0OPhXEXH068TNBRRUxGbl-5S6GE5VTTX9UIGjmt8O5bX-in7GoN0QqUnVx8Wb-t5DisBQiUqfxZfJm7D92rWBPg06lsLk7UcpcAMr2C5MNo82hDRUe9K4h9NI36fO-yEdCTxbeeJhicBoGnq6hsXzHIUwKVrtgnqISCIb6ZdtAhHqa7MZB5tjRAo=w1280",
-  "https://lh3.googleusercontent.com/sitesv/AG8ngQVlYOTssJAqQvPmnzWeDNpnsB5K2eR68jHk1kw1Mm-Vf0lpepjxA-hPl58lw5ut05ndG-jOIT1wR10cj0rAMQMVcJkSySeLhhpswcz6IH1mRMMSd3krkmvQmPpkDCkAFUOlX8zl7-tqJvE-jgALCIlD3OWEPqSJsDR8AMERsXpf_eTbo4hurNQ1JiONLqFOVQw7P2BpHr_32evq4OM-qwG1oAFSsr94fbqHXm9V=w1280",
-];
+const galleryMediaRoot = "https://pub-d67d03737e7a4a24a4c9c9dea3878bdf.r2.dev/galleries/egypte";
+const placeholderUrls = Array.from(
+  { length: 15 },
+  (_, index) => `${galleryMediaRoot}/photos/${String(index + 1).padStart(2, "0")}.jpg`,
+);
 const photoNodes = [...document.querySelectorAll(".gallery-photo")];
 photoNodes.slice(placeholderUrls.length).forEach((photo) => photo.remove());
 const photos = photoNodes.slice(0, placeholderUrls.length);
