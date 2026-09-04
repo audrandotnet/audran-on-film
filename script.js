@@ -16,23 +16,37 @@ previewBurst.className = "stamp-burst";
 previewBurst.setAttribute("aria-hidden", "true");
 tabletop.append(previewBurst);
 
+const previewCache = new Map();
+
+const getPreviewImages = (root) => {
+  if (previewCache.has(root)) return previewCache.get(root);
+
+  const images = Array.from({ length: 5 }, (_, index) => {
+    const image = new Image();
+    image.className = "stamp-burst__photo";
+    image.src = `${root}/${String(index + 1).padStart(2, "0")}.jpg`;
+    image.alt = "";
+    image.decoding = "async";
+    image.fetchPriority = "low";
+    image.style.setProperty("--burst-delay", `${index * 32}ms`);
+    image.style.setProperty("--burst-out-delay", `${(4 - index) * 12}ms`);
+    return image;
+  });
+
+  previewCache.set(root, images);
+  return images;
+};
+
 const loadPreviewBurst = (stamp) => {
   const root = stamp.dataset.previewRoot;
   if (!root || previewBurst.dataset.root === root) return;
-  previewBurst.replaceChildren();
   previewBurst.dataset.root = root;
-  Array.from({ length: 5 }, (_, index) => `${root}/${String(index + 1).padStart(2, "0")}.jpg`).forEach((src, index) => {
-    const image = document.createElement("img");
-    image.className = "stamp-burst__photo";
-    image.src = src;
-    image.alt = "";
-    image.decoding = "async";
-    image.loading = "eager";
-    image.style.setProperty("--burst-delay", `${index * 32}ms`);
-    image.style.setProperty("--burst-out-delay", `${(4 - index) * 12}ms`);
-    previewBurst.append(image);
-  });
+  previewBurst.replaceChildren(...getPreviewImages(root));
 };
+
+stamps.forEach((stamp) => {
+  if (stamp.dataset.previewRoot) getPreviewImages(stamp.dataset.previewRoot);
+});
 
 const positionPreviewBurst = (stamp) => {
   previewBurst.style.left = `${stamp.offsetLeft + stamp.offsetWidth / 2}px`;
