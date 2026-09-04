@@ -461,10 +461,10 @@ h1 {
 
   .stamp--one { left: 5%; top: 5%; }
   .stamp--two { left: 54%; top: 1%; }
-  .stamp--three { left: 33%; top: 39%; }
-  .stamp--four { left: 7%; top: 65%; }
-  .stamp--five { left: 57%; top: 65%; }
-  .stamp--six { left: 34%; top: 27%; }
+  .stamp--three { left: 7%; top: 36%; }
+  .stamp--six { left: 57%; top: 37%; }
+  .stamp--four { left: 7%; top: 66%; }
+  .stamp--five { left: 57%; top: 66%; }
 
   body.is-collection {
     overflow: hidden;
