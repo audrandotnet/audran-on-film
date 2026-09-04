@@ -15,6 +15,9 @@ photos.forEach((photo, index) => {
   const updateOrientation = () => {
     photo.classList.toggle("is-portrait", image.naturalHeight > image.naturalWidth);
   };
+  image.addEventListener("error", () => {
+    image.src = `${galleryMediaRoot}/photos/${index + 1}.jpg`;
+  }, { once: true });
   image.src = placeholderUrls[index];
   image.alt = `${galleryPhotoAlt} — photographie ${String(index + 1).padStart(2, "0")}`;
   if (image.complete) updateOrientation();
