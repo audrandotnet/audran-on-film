@@ -24,6 +24,9 @@ const getPreviewImages = (root) => {
   const images = Array.from({ length: 5 }, (_, index) => {
     const image = new Image();
     image.className = "stamp-burst__photo";
+    image.addEventListener("error", () => {
+      image.src = `${root}/${index + 1}.jpg`;
+    }, { once: true });
     image.src = `${root}/${String(index + 1).padStart(2, "0")}.jpg`;
     image.alt = "";
     image.decoding = "async";
