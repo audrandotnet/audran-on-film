@@ -441,8 +441,8 @@ h1 {
   }
 
   .tabletop {
-    height: 92svh;
-    min-height: 700px;
+    height: 128svh;
+    min-height: 960px;
   }
 
   .stamp-burst__photo {
@@ -460,13 +460,13 @@ h1 {
     width: clamp(122px, 36vw, 178px);
   }
 
-  .stamp--one { left: 3%; top: 2%; }
-  .stamp--two { left: 56%; top: 9%; }
-  .stamp--three { left: 14%; top: 27%; }
-  .stamp--six { left: 59%; top: 36%; }
-  .stamp--four { left: 2%; top: 55%; }
-  .stamp--five { left: 51%; top: 65%; }
-  .stamp--seven { left: 23%; top: 82%; }
+  .stamp--one { left: 5%; top: 2%; }
+  .stamp--six { left: 54%; top: 10%; }
+  .stamp--two { left: 10%; top: 25%; }
+  .stamp--five { left: 55%; top: 38%; }
+  .stamp--three { left: 14%; top: 52%; }
+  .stamp--seven { left: 56%; top: 66%; }
+  .stamp--four { left: 14%; top: 79%; }
 
   body.is-collection {
     overflow: hidden;
