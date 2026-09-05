@@ -150,6 +150,31 @@ photos.forEach((photo) => {
     focusedPhoto.classList.add("is-focused");
     focusedPhoto.disabled = true;
     focusedPhoto.setAttribute("aria-hidden", "true");
+    const focusedImage = focusedPhoto.querySelector("img");
+    const fullResolutionImage = focusedImage.cloneNode(false);
+    const fullResolutionUrl = new URL(image.currentSrc || image.src, window.location.href);
+    fullResolutionUrl.searchParams.set("full-resolution", "1");
+    fullResolutionImage.removeAttribute("srcset");
+    fullResolutionImage.className = "gallery-photo__full-resolution";
+    fullResolutionImage.alt = "";
+    fullResolutionImage.decoding = "async";
+    fullResolutionImage.fetchPriority = "high";
+    Object.assign(fullResolutionImage.style, {
+      position: "absolute",
+      top: `${Number.parseFloat(frameStyle.paddingTop)}px`,
+      left: `${Number.parseFloat(frameStyle.paddingLeft)}px`,
+      width: `${layoutWidth - horizontalFrame}px`,
+      height: `${layoutHeight - verticalFrame}px`,
+      opacity: "0",
+      objectFit: "contain",
+      transition: "opacity 180ms ease",
+    });
+    fullResolutionImage.addEventListener("load", async () => {
+      try { await fullResolutionImage.decode(); } catch {}
+      fullResolutionImage.style.opacity = "1";
+    }, { once: true });
+    focusedPhoto.append(fullResolutionImage);
+    fullResolutionImage.src = fullResolutionUrl.href;
     document.body.append(focusedPhoto);
     galleryGrid.classList.add("has-zoomed-photo");
     photo.classList.add("is-zoom-source");
