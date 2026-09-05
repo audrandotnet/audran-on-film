@@ -266,14 +266,15 @@ const navigatePhoto = async (direction) => {
   const outgoingCenterY = window.innerHeight / 2 - outgoingTop;
   const outgoingTransform = `translate(-50%, -50%) translate(${outgoingCenterX - direction * shift}px, ${outgoingCenterY}px) scale(0.985) rotate(${-direction * 2.4}deg)`;
   focusedAnimation?.cancel();
-  const outgoingAnimation = outgoingPhoto.animate(
+  const outgoingDuration = reduceMotion.matches ? 1 : 220;
+  outgoingPhoto.animate(
     [
       { transform: getComputedStyle(outgoingPhoto).transform, opacity: 1 },
       { transform: outgoingTransform, opacity: 0 },
     ],
-    { duration: reduceMotion.matches ? 1 : 220, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
+    { duration: outgoingDuration, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
   );
-  await outgoingAnimation.finished.catch(() => {});
+  await wait(outgoingDuration + 20);
   outgoingSource.style.visibility = "visible";
   outgoingSource.classList.remove("is-zoom-source");
   outgoingPhoto.remove();
@@ -299,14 +300,15 @@ const navigatePhoto = async (direction) => {
     transform: centeredTransform,
   });
   document.body.append(focusedPhoto);
+  const incomingDuration = reduceMotion.matches ? 1 : 320;
   focusedAnimation = focusedPhoto.animate(
     [
       { transform: incomingTransform, opacity: 0 },
       { transform: centeredTransform, opacity: 1 },
     ],
-    { duration: reduceMotion.matches ? 1 : 320, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
+    { duration: incomingDuration, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
   );
-  await focusedAnimation.finished.catch(() => {});
+  await wait(incomingDuration + 20);
   updateLightboxCounter();
   preloadNeighbours();
   previousButton.disabled = false;
