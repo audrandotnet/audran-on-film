@@ -386,11 +386,12 @@ const closeLightbox = () => {
   lightbox.setAttribute("aria-hidden", "true");
   focusedAnimation?.cancel();
   focusedPhoto.style.transform = destinationTransform;
+  const closingDuration = reduceMotion.matches ? 1 : 760;
   focusedAnimation = focusedPhoto.animate(
     [{ transform: currentTransform }, { transform: destinationTransform }],
-    { duration: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
+    { duration: closingDuration, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
   );
-  focusedAnimation.finished.catch(() => {}).then(() => {
+  window.setTimeout(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => {
       lastPhoto.style.visibility = "visible";
       focusedPhoto.style.visibility = "hidden";
@@ -404,7 +405,7 @@ const closeLightbox = () => {
         focusedIndex = -1;
       });
     }));
-  });
+  }, closingDuration + 20);
 };
 
 closeButton.addEventListener("click", closeLightbox);
