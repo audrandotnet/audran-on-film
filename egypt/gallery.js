@@ -35,8 +35,22 @@ let focusedPhoto = null;
 let focusedOrigin = null;
 let focusedAnimation = null;
 let isNavigating = false;
+let focusedIndex = -1;
+let isPhotoChanging = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+const lightboxNavigation = document.createElement("div");
+lightboxNavigation.className = "lightbox__navigation";
+lightboxNavigation.innerHTML = `
+  <button class="lightbox__arrow lightbox__arrow--previous" type="button" aria-label="Photographie précédente">←</button>
+  <span class="lightbox__counter" aria-live="polite"></span>
+  <button class="lightbox__arrow lightbox__arrow--next" type="button" aria-label="Photographie suivante">→</button>
+`;
+lightbox.append(lightboxNavigation);
+const previousButton = lightboxNavigation.querySelector(".lightbox__arrow--previous");
+const nextButton = lightboxNavigation.querySelector(".lightbox__arrow--next");
+const lightboxCounter = lightboxNavigation.querySelector(".lightbox__counter");
 
 const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
 
@@ -94,27 +108,7 @@ const finishDrag = (event) => {
   }
 };
 
-photos.forEach((photo) => {
-  photo.dataset.x = "0";
-  photo.dataset.y = "0";
-
-  photo.addEventListener("pointerdown", (event) => {
-    if (!event.isPrimary || event.button !== 0 || drag || focusedPhoto) return;
-    drag = {
-      photo,
-      pointerId: event.pointerId,
-      pointerType: event.pointerType,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: Number(photo.dataset.x),
-      originY: Number(photo.dataset.y),
-      moved: false,
-    };
-  });
-
-  photo.addEventListener("lostpointercapture", finishDrag);
-  const openPhoto = () => {
-    if (photo.dataset.justDragged || focusedPhoto) return;
+const getPhotoPresentation = (photo) => {
     const rect = photo.getBoundingClientRect();
     const image = photo.querySelector("img");
     const layoutWidth = photo.offsetWidth;
@@ -140,26 +134,43 @@ photos.forEach((photo) => {
     }
     const targetWidth = contentWidth + horizontalFrame;
     const targetHeight = contentHeight + verticalFrame;
-
-    lastPhoto = photo;
     const originCenterX = rect.left + rect.width / 2;
     const originCenterY = rect.top + rect.height / 2;
     const originScale = layoutWidth / targetWidth;
-    focusedOrigin = { angle, x: originX, y: originY, layoutWidth, layoutHeight, originScale };
-    focusedPhoto = photo.cloneNode(true);
-    focusedPhoto.classList.add("is-focused");
-    focusedPhoto.disabled = true;
-    focusedPhoto.setAttribute("aria-hidden", "true");
-    const focusedImage = focusedPhoto.querySelector("img");
+
+    return {
+      angle,
+      contentHeight,
+      contentWidth,
+      frameStyle,
+      image,
+      layoutHeight,
+      layoutWidth,
+      originCenterX,
+      originCenterY,
+      originScale,
+      originX,
+      originY,
+      targetHeight,
+      targetWidth,
+    };
+};
+
+const createFocusedPhoto = (photo, presentation) => {
+    const clone = photo.cloneNode(true);
+    clone.classList.add("is-focused");
+    clone.disabled = true;
+    clone.setAttribute("aria-hidden", "true");
+    const focusedImage = clone.querySelector("img");
     Object.assign(focusedImage.style, {
-      width: `${contentWidth}px`,
-      height: `${contentHeight}px`,
+      width: `${presentation.contentWidth}px`,
+      height: `${presentation.contentHeight}px`,
       maxWidth: "none",
       maxHeight: "none",
       objectFit: "contain",
     });
     const fullResolutionImage = focusedImage.cloneNode(false);
-    const fullResolutionUrl = new URL(image.currentSrc || image.src, window.location.href);
+    const fullResolutionUrl = new URL(presentation.image.currentSrc || presentation.image.src, window.location.href);
     fullResolutionUrl.searchParams.set("full-resolution", "1");
     fullResolutionImage.removeAttribute("srcset");
     fullResolutionImage.className = "gallery-photo__full-resolution";
@@ -168,10 +179,10 @@ photos.forEach((photo) => {
     fullResolutionImage.fetchPriority = "high";
     Object.assign(fullResolutionImage.style, {
       position: "absolute",
-      top: `${Number.parseFloat(frameStyle.paddingTop)}px`,
-      left: `${Number.parseFloat(frameStyle.paddingLeft)}px`,
-      width: `${contentWidth}px`,
-      height: `${contentHeight}px`,
+      top: `${Number.parseFloat(presentation.frameStyle.paddingTop)}px`,
+      left: `${Number.parseFloat(presentation.frameStyle.paddingLeft)}px`,
+      width: `${presentation.contentWidth}px`,
+      height: `${presentation.contentHeight}px`,
       opacity: "0",
       objectFit: "contain",
       transition: "opacity 180ms ease",
@@ -180,20 +191,52 @@ photos.forEach((photo) => {
       try { await fullResolutionImage.decode(); } catch {}
       fullResolutionImage.style.opacity = "1";
     }, { once: true });
-    focusedPhoto.append(fullResolutionImage);
+    clone.append(fullResolutionImage);
     fullResolutionImage.src = fullResolutionUrl.href;
+    return clone;
+};
+
+const updateLightboxCounter = () => {
+  lightboxCounter.textContent = `${String(focusedIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
+};
+
+const wrappedPhotoIndex = (index) => (index + photos.length) % photos.length;
+
+const preloadPhoto = (index) => {
+  const sourceImage = photos[wrappedPhotoIndex(index)]?.querySelector("img");
+  if (!sourceImage) return;
+  const url = new URL(sourceImage.currentSrc || sourceImage.src, window.location.href);
+  url.searchParams.set("full-resolution", "1");
+  const preload = new Image();
+  preload.decoding = "async";
+  preload.fetchPriority = "high";
+  preload.src = url.href;
+};
+
+const preloadNeighbours = () => {
+  preloadPhoto(focusedIndex - 1);
+  preloadPhoto(focusedIndex + 1);
+};
+
+const openPhoto = (photo) => {
+    if (photo.dataset.justDragged || focusedPhoto) return;
+    const presentation = getPhotoPresentation(photo);
+    lastPhoto = photo;
+    focusedIndex = photos.indexOf(photo);
+    focusedOrigin = presentation;
+    focusedPhoto = createFocusedPhoto(photo, presentation);
     document.body.append(focusedPhoto);
     galleryGrid.classList.add("has-zoomed-photo");
     photo.classList.add("is-zoom-source");
     photo.style.visibility = "hidden";
-    const originTransform = `translate(-50%, -50%) scale(${originScale}) rotate(${angle})`;
-    const focusedTransform = `translate(-50%, -50%) translate(${window.innerWidth / 2 - originCenterX}px, ${window.innerHeight / 2 - originCenterY}px) scale(1) rotate(0deg)`;
+    const originTransform = `translate(-50%, -50%) scale(${presentation.originScale}) rotate(${presentation.angle})`;
+    const focusedTransform = `translate(-50%, -50%) translate(${window.innerWidth / 2 - presentation.originCenterX}px, ${window.innerHeight / 2 - presentation.originCenterY}px) scale(1) rotate(0deg)`;
     Object.assign(focusedPhoto.style, {
       position: "fixed",
-      left: `${originCenterX}px`,
-      top: `${originCenterY}px`,
-      width: `${targetWidth}px`,
-      height: `${targetHeight}px`,
+      left: `${presentation.originCenterX}px`,
+      top: `${presentation.originCenterY}px`,
+      width: `${presentation.targetWidth}px`,
+      height: `${presentation.targetHeight}px`,
       maxHeight: "none",
       margin: "0",
       transform: focusedTransform,
@@ -204,14 +247,98 @@ photos.forEach((photo) => {
     );
     lightbox.setAttribute("aria-hidden", "false");
     lightbox.classList.add("is-open");
+    updateLightboxCounter();
+    preloadNeighbours();
     closeButton.focus({ preventScroll: true });
-  };
+};
 
-  photo.addEventListener("click", () => {
-    openPhoto();
+const navigatePhoto = async (direction) => {
+  if (!focusedPhoto || isPhotoChanging || photos.length < 2) return;
+  isPhotoChanging = true;
+  previousButton.disabled = true;
+  nextButton.disabled = true;
+  const outgoingPhoto = focusedPhoto;
+  const outgoingSource = lastPhoto;
+  const shift = isMobile ? Math.min(window.innerWidth * 0.18, 72) : Math.min(window.innerWidth * 0.1, 150);
+  const outgoingLeft = Number.parseFloat(outgoingPhoto.style.left);
+  const outgoingTop = Number.parseFloat(outgoingPhoto.style.top);
+  const outgoingCenterX = window.innerWidth / 2 - outgoingLeft;
+  const outgoingCenterY = window.innerHeight / 2 - outgoingTop;
+  const outgoingTransform = `translate(-50%, -50%) translate(${outgoingCenterX - direction * shift}px, ${outgoingCenterY}px) scale(0.985) rotate(${-direction * 2.4}deg)`;
+  focusedAnimation?.cancel();
+  const outgoingAnimation = outgoingPhoto.animate(
+    [
+      { transform: getComputedStyle(outgoingPhoto).transform, opacity: 1 },
+      { transform: outgoingTransform, opacity: 0 },
+    ],
+    { duration: reduceMotion.matches ? 1 : 220, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
+  );
+  await outgoingAnimation.finished.catch(() => {});
+  outgoingSource.style.visibility = "visible";
+  outgoingSource.classList.remove("is-zoom-source");
+  outgoingPhoto.remove();
+  await wait(reduceMotion.matches ? 0 : 35);
+
+  focusedIndex = wrappedPhotoIndex(focusedIndex + direction);
+  lastPhoto = photos[focusedIndex];
+  focusedOrigin = getPhotoPresentation(lastPhoto);
+  focusedPhoto = createFocusedPhoto(lastPhoto, focusedOrigin);
+  lastPhoto.classList.add("is-zoom-source");
+  lastPhoto.style.visibility = "hidden";
+  const incomingTransform = `translate(-50%, -50%) translate(${direction * shift}px, 0) scale(0.985) rotate(${direction * 2.4}deg)`;
+  const centeredTransform = "translate(-50%, -50%) scale(1) rotate(0deg)";
+  Object.assign(focusedPhoto.style, {
+    position: "fixed",
+    left: `${window.innerWidth / 2}px`,
+    top: `${window.innerHeight / 2}px`,
+    width: `${focusedOrigin.targetWidth}px`,
+    height: `${focusedOrigin.targetHeight}px`,
+    maxHeight: "none",
+    margin: "0",
+    opacity: "1",
+    transform: centeredTransform,
+  });
+  document.body.append(focusedPhoto);
+  focusedAnimation = focusedPhoto.animate(
+    [
+      { transform: incomingTransform, opacity: 0 },
+      { transform: centeredTransform, opacity: 1 },
+    ],
+    { duration: reduceMotion.matches ? 1 : 320, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
+  );
+  await focusedAnimation.finished.catch(() => {});
+  updateLightboxCounter();
+  preloadNeighbours();
+  previousButton.disabled = false;
+  nextButton.disabled = false;
+  isPhotoChanging = false;
+};
+
+photos.forEach((photo) => {
+  photo.dataset.x = "0";
+  photo.dataset.y = "0";
+
+  photo.addEventListener("pointerdown", (event) => {
+    if (!event.isPrimary || event.button !== 0 || drag || focusedPhoto) return;
+    drag = {
+      photo,
+      pointerId: event.pointerId,
+      pointerType: event.pointerType,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: Number(photo.dataset.x),
+      originY: Number(photo.dataset.y),
+      moved: false,
+    };
   });
 
-  photo.openFromPointer = openPhoto;
+  photo.addEventListener("lostpointercapture", finishDrag);
+
+  photo.addEventListener("click", () => {
+    openPhoto(photo);
+  });
+
+  photo.openFromPointer = () => openPhoto(photo);
 });
 
 document.addEventListener("pointermove", (event) => {
@@ -245,7 +372,7 @@ document.addEventListener("pointerup", (event) => {
 document.addEventListener("pointercancel", finishDrag);
 
 const closeLightbox = () => {
-  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !lastPhoto || !focusedOrigin) return;
+  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !lastPhoto || !focusedOrigin || isPhotoChanging) return;
   const destination = lastPhoto.getBoundingClientRect();
   const currentTransform = getComputedStyle(focusedPhoto).transform;
   const destinationCenterX = destination.left + destination.width / 2;
@@ -272,17 +399,22 @@ const closeLightbox = () => {
         focusedPhoto = null;
         focusedOrigin = null;
         focusedAnimation = null;
+        focusedIndex = -1;
       });
     }));
   });
 };
 
 closeButton.addEventListener("click", closeLightbox);
+previousButton.addEventListener("click", () => navigatePhoto(-1));
+nextButton.addEventListener("click", () => navigatePhoto(1));
 lightbox.addEventListener("click", (event) => {
   if (event.target === lightbox) closeLightbox();
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeLightbox();
+  if (event.key === "ArrowLeft") navigatePhoto(-1);
+  if (event.key === "ArrowRight") navigatePhoto(1);
 });
 
 backLink.addEventListener("click", async (event) => {
