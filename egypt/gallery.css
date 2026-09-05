@@ -269,9 +269,9 @@ h1 {
   }
   .gallery-grid .gallery-photo.is-portrait:nth-child(odd) { grid-column: 1 / span 6; }
   .gallery-grid .gallery-photo.is-portrait:nth-child(even) { grid-column: 7 / span 6; }
-  .gallery-grid .gallery-photo:nth-child(n + 2) { margin-top: clamp(-2.8rem, -9vw, -2rem); }
+  .gallery-grid .gallery-photo:nth-child(n + 2) { margin-top: clamp(-3.2rem, -11vw, -2.35rem); }
   .gallery-grid .gallery-photo.is-portrait + .gallery-photo.is-portrait {
-    margin-top: clamp(-7rem, -20vw, -5rem);
+    margin-top: clamp(-9rem, -28vw, -5.5rem);
   }
   .gallery-grid .gallery-photo:nth-child(12n + 1) { --layout-x: 1.8vw; --layout-y: -0.25rem; --angle: -2.4deg; }
   .gallery-grid .gallery-photo:nth-child(12n + 2) { --layout-x: -2.2vw; --layout-y: 0.5rem; --angle: 1.1deg; }
