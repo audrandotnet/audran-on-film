@@ -1,4 +1,5 @@
 const galleryGrid = document.querySelector(".gallery-grid");
+const galleryShell = document.querySelector(".gallery-shell");
 const galleryMediaRoot = galleryGrid.dataset.mediaRoot;
 const galleryPhotoCount = Number(galleryGrid.dataset.photoCount);
 const galleryPhotoAlt = galleryGrid.dataset.photoAlt;
@@ -37,6 +38,7 @@ let focusedAnimation = null;
 let isNavigating = false;
 let focusedIndex = -1;
 let isPhotoChanging = false;
+let isClosing = false;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const isMobile = window.matchMedia("(max-width: 760px)").matches;
 
@@ -373,8 +375,39 @@ document.addEventListener("pointerup", (event) => {
 });
 document.addEventListener("pointercancel", finishDrag);
 
-const closeLightbox = () => {
-  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !lastPhoto || !focusedOrigin || isPhotoChanging) return;
+const placePhotoInViewport = (photo) => {
+  const rect = photo.getBoundingClientRect();
+
+  if (isMobile) {
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    const targetTop = window.scrollY + rect.top - Math.max(0, (viewportHeight - rect.height) / 2);
+    const maxTop = Math.max(0, document.documentElement.scrollHeight - viewportHeight);
+    window.scrollTo(0, Math.max(0, Math.min(targetTop, maxTop)));
+    return;
+  }
+
+  const shellRect = galleryShell.getBoundingClientRect();
+  const targetLeft = galleryShell.scrollLeft
+    + rect.left
+    - shellRect.left
+    - Math.max(0, (galleryShell.clientWidth - rect.width) / 2);
+  const maxLeft = Math.max(0, galleryShell.scrollWidth - galleryShell.clientWidth);
+  galleryShell.scrollLeft = Math.max(0, Math.min(targetLeft, maxLeft));
+};
+
+const afterLayout = () => new Promise((resolve) => {
+  requestAnimationFrame(() => requestAnimationFrame(resolve));
+});
+
+const closeLightbox = async () => {
+  if (!lightbox.classList.contains("is-open") || !focusedPhoto || !lastPhoto || !focusedOrigin || isPhotoChanging || isClosing) return;
+  isClosing = true;
+
+  // The opaque lightbox hides this instant repositioning. Once layout has
+  // settled, the enlarged paper object can return to the photo now on screen.
+  placePhotoInViewport(lastPhoto);
+  await afterLayout();
+
   const destination = lastPhoto.getBoundingClientRect();
   const currentTransform = getComputedStyle(focusedPhoto).transform;
   const destinationCenterX = destination.left + destination.width / 2;
@@ -403,6 +436,7 @@ const closeLightbox = () => {
         focusedOrigin = null;
         focusedAnimation = null;
         focusedIndex = -1;
+        isClosing = false;
       });
     }));
   }, closingDuration + 20);
