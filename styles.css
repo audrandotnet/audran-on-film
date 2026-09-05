@@ -243,9 +243,9 @@ h1 {
 .stamp--two { left: 36%; top: 12%; --angle: 8deg; }
 .stamp--three { left: 60%; top: 37%; --angle: -6deg; }
 .stamp--four { left: 8%; top: 54%; --angle: 11deg; }
-.stamp--five { left: 37%; top: 64%; --angle: -14deg; }
+.stamp--five { left: 34%; top: 66%; --angle: -14deg; }
 .stamp--six { left: 29%; top: 34%; --angle: 4deg; }
-.stamp--seven { left: 56%; top: 56%; --angle: -8deg; }
+.stamp--seven { left: 64%; top: 61%; --angle: -8deg; }
 
 .collection-page {
   position: absolute;
