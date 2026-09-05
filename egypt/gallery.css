@@ -88,6 +88,8 @@ h1 {
 .gallery-photo {
   --x: 0px;
   --y: 0px;
+  --layout-x: 0px;
+  --layout-y: 0px;
   --angle: 0deg;
   --scale: 1;
   position: relative;
@@ -102,7 +104,7 @@ h1 {
   border: 0;
   background: #f1eee7;
   cursor: zoom-in;
-  transform: translate3d(var(--x), var(--y), 0) rotate(var(--angle)) scale(var(--scale));
+  transform: translate3d(calc(var(--x) + var(--layout-x)), calc(var(--y) + var(--layout-y)), 0) rotate(var(--angle)) scale(var(--scale));
   transform-origin: 50% 50%;
   box-shadow: 0 18px 35px rgb(0 0 0 / 0.28);
   transition: opacity 160ms ease, transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -268,6 +270,18 @@ h1 {
   .gallery-grid .gallery-photo.is-portrait:nth-child(odd) { grid-column: 1 / span 6; }
   .gallery-grid .gallery-photo.is-portrait:nth-child(even) { grid-column: 7 / span 6; }
   .gallery-grid .gallery-photo:nth-child(n + 2) { margin-top: clamp(-1.8rem, -6vw, -1.15rem); }
+  .gallery-grid .gallery-photo:nth-child(12n + 1) { --layout-x: 1.8vw; --layout-y: -0.25rem; --angle: -2.4deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 2) { --layout-x: -2.2vw; --layout-y: 0.5rem; --angle: 1.1deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 3) { --layout-x: -0.8vw; --layout-y: -0.55rem; --angle: 2.8deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 4) { --layout-x: 1.4vw; --layout-y: 0.2rem; --angle: -1.5deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 5) { --layout-x: 2.4vw; --layout-y: 0.65rem; --angle: 1.7deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 6) { --layout-x: -1.2vw; --layout-y: -0.35rem; --angle: -2.9deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 7) { --layout-x: -1.7vw; --layout-y: 0.35rem; --angle: -1.8deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 8) { --layout-x: 2vw; --layout-y: -0.6rem; --angle: 2.2deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 9) { --layout-x: 0.6vw; --layout-y: 0.55rem; --angle: -0.9deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 10) { --layout-x: -2.5vw; --layout-y: -0.15rem; --angle: 2.6deg; }
+  .gallery-grid .gallery-photo:nth-child(12n + 11) { --layout-x: 1.1vw; --layout-y: -0.45rem; --angle: -2.1deg; }
+  .gallery-grid .gallery-photo:nth-child(12n) { --layout-x: -0.4vw; --layout-y: 0.7rem; --angle: 1.4deg; }
   .gallery-grid .gallery-photo:nth-child(1) { z-index: 9; }
   .gallery-grid .gallery-photo:nth-child(2) { z-index: 2; }
   .gallery-grid .gallery-photo:nth-child(3) { z-index: 3; }
