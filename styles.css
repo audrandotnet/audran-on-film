@@ -239,13 +239,13 @@ h1 {
   transition: opacity 260ms ease;
 }
 
-.stamp--one { left: 7%; top: 17%; --angle: -12deg; }
-.stamp--two { left: 43%; top: 12%; --angle: 8deg; }
-.stamp--three { left: 67%; top: 37%; --angle: -6deg; }
-.stamp--four { left: 14%; top: 54%; --angle: 11deg; }
-.stamp--five { left: 45%; top: 64%; --angle: -14deg; }
-.stamp--six { left: 35%; top: 34%; --angle: 4deg; }
-.stamp--seven { left: 67%; top: 57%; --angle: -8deg; }
+.stamp--one { left: 3%; top: 17%; --angle: -12deg; }
+.stamp--two { left: 36%; top: 12%; --angle: 8deg; }
+.stamp--three { left: 60%; top: 37%; --angle: -6deg; }
+.stamp--four { left: 8%; top: 54%; --angle: 11deg; }
+.stamp--five { left: 37%; top: 64%; --angle: -14deg; }
+.stamp--six { left: 29%; top: 34%; --angle: 4deg; }
+.stamp--seven { left: 56%; top: 56%; --angle: -8deg; }
 
 .collection-page {
   position: absolute;
