@@ -144,13 +144,20 @@ photos.forEach((photo) => {
     lastPhoto = photo;
     const originCenterX = rect.left + rect.width / 2;
     const originCenterY = rect.top + rect.height / 2;
-    const targetScale = targetWidth / layoutWidth;
-    focusedOrigin = { angle, x: originX, y: originY, layoutWidth, layoutHeight, targetScale };
+    const originScale = layoutWidth / targetWidth;
+    focusedOrigin = { angle, x: originX, y: originY, layoutWidth, layoutHeight, originScale };
     focusedPhoto = photo.cloneNode(true);
     focusedPhoto.classList.add("is-focused");
     focusedPhoto.disabled = true;
     focusedPhoto.setAttribute("aria-hidden", "true");
     const focusedImage = focusedPhoto.querySelector("img");
+    Object.assign(focusedImage.style, {
+      width: `${contentWidth}px`,
+      height: `${contentHeight}px`,
+      maxWidth: "none",
+      maxHeight: "none",
+      objectFit: "contain",
+    });
     const fullResolutionImage = focusedImage.cloneNode(false);
     const fullResolutionUrl = new URL(image.currentSrc || image.src, window.location.href);
     fullResolutionUrl.searchParams.set("full-resolution", "1");
@@ -163,8 +170,8 @@ photos.forEach((photo) => {
       position: "absolute",
       top: `${Number.parseFloat(frameStyle.paddingTop)}px`,
       left: `${Number.parseFloat(frameStyle.paddingLeft)}px`,
-      width: `${layoutWidth - horizontalFrame}px`,
-      height: `${layoutHeight - verticalFrame}px`,
+      width: `${contentWidth}px`,
+      height: `${contentHeight}px`,
       opacity: "0",
       objectFit: "contain",
       transition: "opacity 180ms ease",
@@ -179,14 +186,14 @@ photos.forEach((photo) => {
     galleryGrid.classList.add("has-zoomed-photo");
     photo.classList.add("is-zoom-source");
     photo.style.visibility = "hidden";
-    const originTransform = `translate(-50%, -50%) rotate(${angle})`;
-    const focusedTransform = `translate(-50%, -50%) translate(${window.innerWidth / 2 - originCenterX}px, ${window.innerHeight / 2 - originCenterY}px) scale(${targetScale}) rotate(0deg)`;
+    const originTransform = `translate(-50%, -50%) scale(${originScale}) rotate(${angle})`;
+    const focusedTransform = `translate(-50%, -50%) translate(${window.innerWidth / 2 - originCenterX}px, ${window.innerHeight / 2 - originCenterY}px) scale(1) rotate(0deg)`;
     Object.assign(focusedPhoto.style, {
       position: "fixed",
       left: `${originCenterX}px`,
       top: `${originCenterY}px`,
-      width: `${layoutWidth}px`,
-      height: `${layoutHeight}px`,
+      width: `${targetWidth}px`,
+      height: `${targetHeight}px`,
       maxHeight: "none",
       margin: "0",
       transform: focusedTransform,
@@ -245,7 +252,7 @@ const closeLightbox = () => {
   const destinationCenterY = destination.top + destination.height / 2;
   const deltaX = destinationCenterX - Number.parseFloat(focusedPhoto.style.left);
   const deltaY = destinationCenterY - Number.parseFloat(focusedPhoto.style.top);
-  const destinationTransform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px) scale(1) rotate(${focusedOrigin.angle})`;
+  const destinationTransform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px) scale(${focusedOrigin.originScale}) rotate(${focusedOrigin.angle})`;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   focusedAnimation?.cancel();
