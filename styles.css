@@ -441,8 +441,8 @@ h1 {
   }
 
   .tabletop {
-    height: 96svh;
-    min-height: 750px;
+    height: 76svh;
+    min-height: 620px;
   }
 
   .stamp-burst__photo {
@@ -460,13 +460,13 @@ h1 {
     width: clamp(122px, 36vw, 178px);
   }
 
-  .stamp--one { left: 8%; top: 2%; z-index: 1; }
-  .stamp--six { left: 53%; top: 10%; z-index: 2; }
-  .stamp--two { left: 24%; top: 22%; z-index: 3; }
-  .stamp--five { left: 43%; top: 35%; z-index: 4; }
-  .stamp--four { left: 5%; top: 43%; z-index: 5; }
-  .stamp--seven { left: 55%; top: 54%; z-index: 6; }
-  .stamp--three { left: 24%; top: 67%; z-index: 7; }
+  .stamp--one { left: 10%; top: 0; z-index: 1; }
+  .stamp--six { left: 54%; top: 8%; z-index: 2; }
+  .stamp--two { left: 26%; top: 17%; z-index: 3; }
+  .stamp--five { left: 44%; top: 25%; z-index: 4; }
+  .stamp--four { left: 8%; top: 30%; z-index: 5; }
+  .stamp--seven { left: 56%; top: 39%; z-index: 6; }
+  .stamp--three { left: 25%; top: 49%; z-index: 7; }
 
   body.is-collection {
     overflow: hidden;
